@@ -1,2 +1,2 @@
 # notes
-Here are miscellaneous notes 
+Here are my miscellaneous notes 
