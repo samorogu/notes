@@ -25,7 +25,7 @@ sayHello();
 
 
 And the difference  bewteen `let`  and `const` lies in the fact that the second cannot be reassigned (read-only accessible) .
-Use let only if it is needed to reassing a variable.
+Use let only if it is needed to reassign a variable.
 
 ## Objects
 After ES6, a method inside an object can be code as:
