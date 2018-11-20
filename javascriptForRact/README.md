@@ -115,12 +115,11 @@ const person = {
 person.talk();
 ```
 
-If it is included an arrow function, this is inherited
+If it is included an arrow function, this is inherited and it is'nt need to reference with self.
 
 ```
 const person = {
     talk(){
-        var self=this;
         setTimeout(()=>{
         console.log("this",this);
         },1000);
@@ -129,4 +128,60 @@ const person = {
 person.talk();
 ```
 
-this is not reset, this is in the context that is defined. 
+`this` is not reset, it is  defined in the context that is declared. 
+
+## Array.map
+
+`.Map` is useful for iterating objects in an array. It can be used with arrow functions to keep it cleaner.
+```
+colors=['blue'red,'','yellow'];
+const items=colors.map(color=>`<li>${color}<\li>`);
+console.log(items);
+
+```
+
+## Object destructuring
+
+In es6, to keep the code cleaner, declaration of variables can be define in a line:
+
+```
+const address={
+street:'',
+number:'',
+city:''
+};
+
+const street = address.street;
+const number = address.number;
+const city = address.city;
+
+//is equivalent to:
+const {street,number,city}=address;
+
+// and if they need an alias:
+
+const {street:st,number:nb,city:ct}=address;
+
+```
+
+## Spread operator
+
+To combine arrays, spread can be used (`...`) to paste the elements of an array.
+```
+cont first = [1,2,3];
+cont first = [1,2,3];
+
+const combined = first.concat (second);//old version
+const combined = [...first,'a',...second,'b'];//new version
+
+```
+
+It can be used to combine two properties
+```
+
+const first ={name :"Sam"};
+const second ={job: "programmer"};
+
+const combined = {...first,...second,location:"Mexico"};
+console.log(combined);
+```
