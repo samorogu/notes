@@ -185,3 +185,30 @@ const second ={job: "programmer"};
 const combined = {...first,...second,location:"Mexico"};
 console.log(combined);
 ```
+
+## Clases
+
+First, a shortcut to move code is to use alt+down to move the code.
+Just like in Java, Clases can be defined to declare multiple objets and inherite properties from parent Clases:
+
+```
+class Person {
+    constructor(name){
+    this.name=name};
+    }
+const walk(){
+console.log("walk")};
+    }
+} 
+class Teacher{
+    constructor(name,degree){
+        super (name);
+        this.degree= degree;
+        const teach=function(){
+        console.log();
+        }
+    }
+}
+
+const teacher = new Teacher("Sam","Master");
+```
