@@ -222,7 +222,7 @@ To keep the code cleaner, separate classes can be saved into different files to 
 
 import {Person} from './person';
 
-export class Teacher extend Person {
+default export class Teacher extend Person {
     constructor(name,degree){
     super(name);
     this.degree= degree;
@@ -242,7 +242,7 @@ teacher.teach();
 When importing a module, objects ( clases  wrap functions, functions are objects ergo classes are objects) can be defaulted to export and the sintax for calling them change:
 
 ```
-import Teacher from './teacher';
+import Teacher, {promote} from './teacher';
 ```
 
 
