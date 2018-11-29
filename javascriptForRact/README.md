@@ -212,3 +212,38 @@ class Teacher{
 
 const teacher = new Teacher("Sam","Master");
 ```
+
+## Modules
+
+To keep the code cleaner, separate classes can be saved into different files to easy maintainability.
+
+```
+// In teacher.js... Person is assumed to be saved in person.js 
+
+import {Person} from './person';
+
+export class Teacher extend Person {
+    constructor(name,degree){
+    super(name);
+    this.degree= degree;
+}
+    const teach = function (){
+    console.log("teach");
+}
+}
+//index.js
+import {Teacher} from './teacher';// crt+space to see available options to import
+
+const teacher= new Teacher ("Sam","Msc");
+teacher.teach();
+```
+## named and default export
+
+When importing a module, objects ( clases  wrap functions, functions are objects ergo classes are objects) can be defaulted to export and the sintax for calling them change:
+
+```
+import Teacher from './teacher';
+```
+
+
+
