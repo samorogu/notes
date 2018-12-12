@@ -57,6 +57,7 @@ class Movies extends Component {
             <th>Genre</th>
             <th>Stock</th>
             <th>Rate</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -65,6 +66,7 @@ class Movies extends Component {
               <td>{movie.title}</td>
               <td>{movie.genre.name}</td>
               <td>{movie.numberInStock}</td>
+              <td>{movie.dailyRentalRate}</td>
               <td>{movie.dailyRentalRate}</td>
             </tr>
           ))}
@@ -99,4 +101,116 @@ class App extends Component {
 export default App;
 
 ```
+
+Next we have to include a button with boostrap style `button.btn.btn-danger.btn-sm+tab`  without forgeting that each time We iterative render an object, it has to have a unique id:
+
+```{javascript}
+
+
+        <tbody>
+          {this.state.movies.map(movie => (
+            
+            <tr key={movie._id}>
+              <td>{movie.title}</td>
+              <td>{movie.genre.name}</td>
+              <td>{movie.numberInStock}</td>
+              <td>{movie.dailyRentalRate}</td>
+              <td>
+                <button className="btn btn-danger btn-sm ml-2">Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+
+```
+
+Next we add the count of movies in the movies object. We dont have to forget to include React.fragment to the return statement
+
+```
+ <React.Fragment>
+        <h4>The total number of movies is {this.state.movies.length}</h4>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Genre</th>
+              <th>Stock</th>
+              <th>Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.movies.map(movie => (
+              <tr key={movie._id}>
+                <td>{movie.title}</td>
+                <td>{movie.genre.name}</td>
+                <td>{movie.numberInStock}</td>
+                <td>{movie.dailyRentalRate}</td>
+                <td>
+                  <button
+                    onClick={() => this.handleDelete(movie)}
+                    className="btn btn-danger btn-sm ml-2"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </React.Fragment>
+```
+Next we have to update the state method but withuout calling directly. We call the setstate method.
+We create an array without the movie we will delete in the method handleDelte(movie)
+
+```{javascript}
+handleDelete = movie => {
+    const movies = this.state.movies.filter(m => m._id !== movie._id);
+    //in modern javascript when we have this repetition, we can leave only the movie
+    //this.setState({ movies: movies });
+    this.setState({ movies });
+  };
+```
+
+Finally we have to conditional rendering the message of movies if there are 0 movies left, we use object destructuring for not having to type a lot:
+
+
+```{javascript}
+const { length: count } = this.state.movies; //object destructuring
+    if (count === 0) return <p>There are no movies</p>;
+
+    return (
+      <React.Fragment>
+        <p>There are {count} movies in the database</p>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Genre</th>
+              <th>Stock</th>
+              <th>Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.movies.map(movie => (
+              <tr key={movie._id}>
+                <td>{movie.title}</td>
+                <td>{movie.genre.name}</td>
+                <td>{movie.numberInStock}</td>
+                <td>{movie.dailyRentalRate}</td>
+                <td>
+                  <button
+                    onClick={() => this.handleDelete(movie)}
+                    className="btn btn-danger btn-sm ml-2"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </React.Fragment>
+
+``` 
+
 
