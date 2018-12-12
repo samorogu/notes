@@ -40,40 +40,63 @@ export default Movies;
 
 Next we need to dynamically put each movie en each row with teh map method and a arrow function. With the snippets the code will end like this:
 
-```
-import React, { Component } from 'react';
-import getMovies from'../services/fakeMoviesService';
+```{javascript}
+import React, { Component } from "react";
+import { getMovies } from "../services/fakeMovieService";
 
 class Movies extends Component {
-    state = {
-        movies:getMovies();//until I use lifehooks, this will be the way I will set the state
-     };
-    render() {
-        return (
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Genre</th>
-                        <th>Stock</th>
-                        <th>Rate</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.state.movies.map(movie =>{
-                        <tr>
-                            <td>movies.title</td>
-                            <td>movies.genre.name</td>
-                            <td>movies.numberInStock</td>
-                            <td>movies.dailyRentalRate</td>
-                        </tr>
-                    })}
-
-                </tbody>
-            </table>
-         );
-    }
+  state = {
+    movies: getMovies() //until I use lifehooks, this will be the way I will set the state
+  };
+  render() {
+    return (
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Stock</th>
+            <th>Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.movies.map(movie => (
+            <tr>
+              <td>{movie.title}</td>
+              <td>{movie.genre.name}</td>
+              <td>{movie.numberInStock}</td>
+              <td>{movie.dailyRentalRate}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
 }
 
 export default Movies;
 ```
+
+Finally to conclude the first part of the exercise, in the App.js we will include de movies component:
+
+```{javascript}
+import React, { Component } from "react";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+import Movies from "./components/movies";
+
+class App extends Component {
+  render() {
+    return (
+      <React.Fragment>
+        <main className="container" />
+        <Movies />
+      </React.Fragment>
+    );
+  }
+}
+
+export default App;
+
+```
+
