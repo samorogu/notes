@@ -11,7 +11,7 @@ and had to execute as adminitrator in powershell `Set-ExecutionPolicy Unrestrict
 create-react-app counter-app
 ```
 
-After all my attemps, I concluded I needed to permisions for updating node (at the time I'm writting this, I haven't requested them yet jeje).
+After all my attemps, I concluded I needed to asked for permisions for updating node (at the time I'm writting this, I haven't requested them yet jeje).
 
 ## Vidly proyect
 
@@ -38,7 +38,7 @@ export default Movies;
 
 ```
 
-Next we need to dynamically put each movie en each row with teh map method and a arrow function. With the snippets the code will end like this:
+Next we need to dynamically put each movie en each row with the map method and a arrow function. With the snippets the code will end like this:
 
 ```{javascript}
 import React, { Component } from "react";
@@ -124,7 +124,7 @@ Next we have to include a button with boostrap style `button.btn.btn-danger.btn-
 
 ```
 
-Next we add the count of movies in the movies object. We dont have to forget to include React.fragment to the return statement
+Next we add the count of movies in the movies object. We don't have to forget to include React.fragment to the return statement
 
 ```
  <React.Fragment>
@@ -159,7 +159,7 @@ Next we add the count of movies in the movies object. We dont have to forget to 
         </table>
       </React.Fragment>
 ```
-Next we have to update the state method but withuout calling directly. We call the setstate method.
+Next we have to update the state method but withuout calling it directly. We call the `setstate` method.
 We create an array without the movie we will delete in the method handleDelte(movie)
 
 ```{javascript}
@@ -231,7 +231,7 @@ body {
 
 ### Like Component
 
-Continuing with the vidley proyect, lets create a like reusable like component. With this we will create a like button that can be used with other proyects. First in a new directory called common we will create a file named like.jsx. As an input we need a boolean(liked or not) and as an output we need to raise an event: onClick for the compononent that will handle the event do what it is requiered. Back in the font awesome documentary, there is the heart taht we will used for the [like component](https://fontawesome.com/v4.7.0/icon/heart-o).
+Continuing with the vidley proyect, lets create a reusable `like` component. With this we will create a like button that can be used with other proyects. First in a new directory called common we will create a file named like.jsx. As an input we need a boolean(liked or not) and as an output we need to raise an event: onClick for the compononent that will handle the event do what it is requiered. Back in the font awesome documentary, there is the heart taht we will used for the [like component](https://fontawesome.com/v4.7.0/icon/heart-o).
 
 For the first part we need to include the heart component:
 
@@ -286,8 +286,42 @@ Finally we include another row and call the like component with the handle like 
 </td>
 
 ```
-  
 
+### Pagination, sorting and filtering
+
+#### Pagination
+
+Like the like component we will create pagination.jsx as an standalone component. To render the pagination we will use [bootstrap pagination](https://getbootstrap.com/docs/4.2/components/pagination/):
+
+```
+
+imr+tab//snippet
+sfc+tab//snippet
+
+const Pagination = props => {
+  return nav>ul.pagination>li.page-item>a.page-link;//snippet
+};
+
+export default Pagination;
+
+```
+
+this will create the basic pagination stateless function component:
+
+```
+import React from "react";
+
+const Pagination = props => {
+  return <nav>
+      <ul className="pagination">
+          <li className="page-item"><a href="" className="page-link"></a></li>
+      </ul>
+  </nav>;
+};
+
+export default Pagination;
+
+```
 
 
 
