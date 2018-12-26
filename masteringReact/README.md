@@ -15,7 +15,7 @@ After all my attemps, I concluded I needed to permisions for updating node (at t
 
 ## Vidly proyect
 
-## exercise solution
+### exercise solution
 
 First we create a movies.jsx component in the components folder:
 
@@ -228,5 +228,67 @@ body {
 }
 
 ```
+
+### Like Component
+
+Continuing with the vidley proyect, lets create a like reusable like component. With this we will create a like button that can be used with other proyects. First in a new directory called common we will create a file named like.jsx. As an input we need a boolean(liked or not) and as an output we need to raise an event: onClick for the compononent that will handle the event do what it is requiered. Back in the font awesome documentary, there is the heart taht we will used for the [like component](https://fontawesome.com/v4.7.0/icon/heart-o).
+
+For the first part we need to include the heart component:
+
+```
+import React from "react";
+
+//Input: liked: boolean
+//Output: onClick
+
+const Like = props => {
+  let classes = "fa fa-heart";
+  if (!props.liked) classes += "-o";
+  return (
+    <i
+      onClick={props.onClick}
+      style={{ cursor: "pointer" }}
+      className={classes}
+      aria-hidden="true"
+    />
+  );
+};
+
+export default Like;
+
+```
+We use a stateless component because the component is only rassing events. the onClick event receaves the event and the movies.jsx is handle the event. if the atribute liked is true, the heart will be filled and if not it will render an empy heart.
+
+Back in the movies.jsx component, we include the handdleLike:
+
+```
+  handleLike = movie => {
+    //console.log("movie liked", movie);
+    const movies = [...this.state.movies];
+    const index = movies.indexOf(movie);
+    movies[index] = { ...movies[index] };
+    movies[index].liked = !movies[index].liked;
+    this.setState({ movies });
+  };
+
+```
+
+if the like event is called, it will togle the like atributed in the movies.
+
+Finally we include another row and call the like component with the handle like event.
+
+```
+<td>
+  <Like
+    liked={movie.liked}
+    onClick={() => this.handleLike(movie)}
+  />
+</td>
+
+```
+  
+
+
+
 
 
