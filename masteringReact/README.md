@@ -15,7 +15,7 @@ After all my attemps, I concluded I needed to asked for permisions for updating 
 
 ## Vidly proyect
 
-### exercise solution
+### 1 exercise solution
 
 First we create a movies.jsx component in the components folder:
 
@@ -229,7 +229,7 @@ body {
 
 ```
 
-### Like Component
+### 2 Like Component
 
 Continuing with the vidley proyect, lets create a reusable `like` component. With this we will create a like button that can be used with other proyects. First in a new directory called common we will create a file named like.jsx. As an input we need a boolean(liked or not) and as an output we need to raise an event: onClick for the compononent that will handle the event do what it is requiered. Back in the font awesome documentary, there is the heart taht we will used for the [like component](https://fontawesome.com/v4.7.0/icon/heart-o).
 
@@ -289,7 +289,7 @@ Finally we include another row and call the like component with the handle like 
 
 ### Pagination, sorting and filtering
 
-#### Pagination
+#### 3 Pagination
 
 Like the like component we will create pagination.jsx as an standalone component. To render the pagination we will use [bootstrap pagination](https://getbootstrap.com/docs/4.2/components/pagination/):
 
@@ -312,17 +312,196 @@ this will create the basic pagination stateless function component:
 import React from "react";
 
 const Pagination = props => {
-  return <nav>
+  return (
+    <nav>
       <ul className="pagination">
-          <li className="page-item"><a href="" className="page-link"></a></li>
+        <li className="page-item">
+          <a className="page-link">1</a>
+        </li>
       </ul>
-  </nav>;
+    </nav>
+  );
 };
 
 export default Pagination;
 
 ```
 
+then we will install loadash from the  terminal (we can open the terminal from vsc with the shortcut: `backtick+ctrl`) `npm -i lodash@4.17.10`. Lodash is the optimize version from underscore.
+
+Then we create dinamically the number of pages with the 2 properties given by props:
+
+```
+import React from "react";
+import _ from "lodash"; //optimization from underscore
+
+const Pagination = props => {
+  const { itemsCount, pageSize } = props;
+
+  const pagesCount = itemsCount / pageSize;
+
+  const pages = _.range(1, pagesCount + 1);
+
+  return (
+    <nav>
+      <ul className="pagination">
+        {pages.map(page => (
+          <li key={page} className="page-item">
+            <a className="page-link">{page}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+
+export default Pagination;
+
+```
+
+If we have a movie count of 10, the pages count most be 1 but because we don't want it to render only the page 1, we wont render the pagination:
+
+```
+
+const Pagination = props => {
+  const { itemsCount, pageSize } = props;
+
+  const pagesCount = Math.ceil(itemsCount / pageSize);//if we dont take the ceil, it wont equal 1 and will be a floting number
+
+  if (pagesCount === 1) return null;
+
+  const pages = _.range(1, pagesCount + 1); //if pages count is 3, the range will be 2, so we need to increment by 1
+
+  return (
+    <nav>
+      <ul className="pagination">
+        {pages.map(page => (
+          <li key={page} className="page-item">
+            <a className="page-link">{page}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+
+```
+
+##### Handling Page Changes
+
+Right now we aren't handdling the `handlePageChange` event inside the pagination so if the user cliks on the anchor, we need to raise the event. if the anchor is clicked, we call the `onPageChange` event.
+
+Also if we want to highlight the page that we actually are we need to compare so we need to include another property `currentPage`
+
+```
+
+const Pagination = props => {
+  const { itemsCount, pageSize, onPageChange } = props;// we include the event onPageChange
+
+  const pagesCount = Math.ceil(itemsCount / pageSize);
+
+  if (pagesCount === 1) return null;
+
+  const pages = _.range(1, pagesCount + 1); 
+
+  return (
+    <nav>
+      <ul className="pagination">
+        {pages.map(page => (
+          <li key={page} className="page-item">
+            <a className="page-link" onClick={() => onPageChange(page)}>
+              {page}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+
+export default Pagination;
+
+```
+cmd+p or crtl+p to search for the methods of the class, so in this case we can search for hadlePageChange and edit it in the movies.jsx:
+
+```
+ handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
+
+```
+
+Finally we will change dinamically the active page depending if the page is equal to the current page:
+
+```
+
+   <nav>
+      <ul className="pagination">
+        {pages.map(page => (
+          <li
+            key={page}
+            className={page === currentPage ? "page-item active" : "page-item"}
+          >
+            <a className="page-link" onClick={() => onPageChange(page)}>
+              {page}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+```
+
+##### Pagination- Paginating Data
+
+We are ready to paginating the data. For this we need to create a utility function that we can call in others components. First we create a utils directory in the proyect and we create the paginate file and define the algorithm to return the number of items that are needed to diplay in the page:
+
+```
+import _ from "lodash";
+
+export function paginate(items, pageNumber, pageSize) {
+  const startIndex = (pageNumber - 1) * pageSize;
+  return _(items)
+    .slice(startIndex)
+    .take(pageSize)
+    .value(); //wrap the array to a lodash object
+}
+```
+
+We slice the array staring with the current page and take the items needed to render. We need to apply the value property to convert it to a simple array.
+
+Back to the moves.jsx we desctructure the moves to allMovies and call the function that will change dinamically when the page is updated. Not to forget to change this.props.moves that was called in when rendering each movie( movies.map instead of this.state.movies.map) :
+
+```
+
+ const { pageSize, currentPage, movies: allMovies } = this.state;//destructuring the movies
+   
+
+const movies = paginate(allMovies, currentPage, pageSize); //if count is not 0 we will create an array of movies depending on the current page
+
+```
+
+##### Pagination- Type Checking with PropTypes
+
+To avoid bugs with typing we need to install `npm i prop-types@15.6.2`.
+
+Inside the documentation of react there is a tab `Typechecking With PropTypes` with the available list of types.
+
+If we pass another type that isn't the one a component specting, it won't show an error, it will only have a bug, so we can include a validation inside a component to show a warning only in the development.
+
+If we change the item.count and hardcode the "abc" string, we can include the next validation in the pagination component:
 
 
+```
+import PropTypes from "prop-types";
+
+Pagination.propTypes = {
+  itemsCount: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired
+};
+
+```
+It will pop out a a waring with the failing prop type message.
 
