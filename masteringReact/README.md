@@ -505,3 +505,78 @@ Pagination.propTypes = {
 ```
 It will pop out a a waring with the failing prop type message.
 
+#### 4 List group
+
+##### Filtering-Component Interface
+
+Now we will implement a list of genres of the movies. 
+
+Fist we will insert a div element instead of the React fragment and snippet 2 columns `div.col-2+div.col`. In the right column we will include all our paragraph compoment and in the left column we will include the listGroup component.
+
+```
+       <div className="col-2" />
+        <ListGroup
+          items={this.state.genres}
+          onItemSelect={this.handleGenreSelect}
+        />
+
+```
+
+We include the listgroup component and import the getGenres function in the fakeGenreService and initialize the getGenres in the componentDidMount cyclehook. 
+
+Next we will create the handleGenreSelect event that for now will print in console
+
+```
+import { getGenres } from "../services/fakeMovieService";
+...
+class Movies extends Component {
+  state = {
+    movies: [], //until I use lifehooks, this will be the way I will set the state
+    genres: [], //For the purpous of this exercise will get the genres in component did mount
+    currentPage: 1, //current page in the pagination
+    pageSize: 3 //number of pages displayed
+  };
+  ...
+componentDidMount() {
+    this.setState({ movies: getMovies(), genres: getGenres() });
+  }
+...
+handleGenreSelect = genre => {
+    console.log(genre);
+  };
+```
+
+And finally we will create the common component `common/listGroup.jsx` as a stateless function compoenent for now:
+
+```
+import React from "react";
+
+const ListGroup = () => {
+  return null;
+};
+
+export default ListGroup;
+```
+
+##### Filtering-Displaying items
+
+Now we will use a bootstrap list. To do this we will go to the listGroup component and snippet a list in the return statement `ul.list-group>li.list-group-item` and map each item element with a unique key id:
+
+```
+const ListGroup = props => {
+  const { items } = props;
+  return (
+    <ul className="list-group">
+      {items.map(item => (
+        <li key={item._id} className="list-group-item">
+          {item.name}
+        </li>
+      ))}
+    </ul>
+  );
+};
+```
+
+To keep a better visual column we will change the className of the listGroup component to a `col-3`.
+
+
