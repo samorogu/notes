@@ -579,4 +579,47 @@ const ListGroup = props => {
 
 To keep a better visual column we will change the className of the listGroup component to a `col-3`.
 
+##### listGroup - default props
+
+When we incorporated the properties in the listGroup component we could increase the difficult of using that component when increasing it functionality. To avoid this, we can include default props and in the future if we need to change the name of an object property, we can do it and not worry about all the others properties.
+
+listGroup.jsx
+```
+...
+ListGroup.defaultProps{
+textProperty='name',
+valueProperty='_id'
+};
+```
+
+##### listGroup-Handling select
+
+Now we will handle the item select. First we will print the item selected: we need to call the method handleItemSelected and raise and event.
+
+listGroup.jsx
+```
+
+const {items,textProperty,valueProperty, onItemSelect} =props;
+
+const ListGroup = props => {
+  const { items } = props;
+  return (
+    <ul className="list-group">
+      {items.map(item => (
+        <li 
+        onClickItem= {()=>onItemSelect(item)}
+        key={item[valueProperty]}
+        className="list-group-item"
+        >
+          {item[textProperty]}
+        </li>
+      ))}
+    </ul>
+  );
+};
+```
+
+
+
+
 
