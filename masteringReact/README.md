@@ -586,10 +586,12 @@ When we incorporated the properties in the listGroup component we could increase
 listGroup.jsx
 ```
 ...
-ListGroup.defaultProps{
-textProperty='name',
-valueProperty='_id'
+ListGroup.defaultProps = {
+  textProperty: "name",
+  valueProperty: "_id"
 };
+
+export default ListGroup;
 ```
 
 ##### listGroup-Handling select
@@ -619,7 +621,98 @@ const ListGroup = props => {
 };
 ```
 
+Next we will change the selected item className depending on the clicked genre:
+
+listGroup.jsx
+```
+  const {
+    items,
+    textProperty,
+    valueProperty,
+    onItemSelect,
+    selectedItem
+  } = props;
+  return (
+    <ul className="list-group">
+      {items.map(item => (
+        <li
+          onClick={() => onItemSelect(item)}
+          key={item[valueProperty]}
+          className={
+            item === selectedItem ? "list-group-item active" : "list-group-item"
+          }
+        >
+          {item[textProperty]}
+        </li>
+      ))}
+    </ul>
 
 
+```
+
+and handle the selected item.
+
+movies.jsx
+
+```
+...
+
+  handleGenreSelect = genre => {
+    //console.log(genre);
+    this.setState({ selectedGenre: genre });
+  };
+
+  ...
+
+<div className="row">
+  <div className="col-3">
+      <ListGroup
+        items={this.state.genres}
+        selectedItem={this.state.selectedGenre}
+        onItemSelect={this.handleGenreSelect}
+       />
+</div>
 
 
+```
+
+##### listGroup-Implementing Filtering
+
+Now we will filter the movies so before the pagination we need to filter the movies, so we will create a constant viltered that will change only if the selected Genre is clicked:
+
+movies.jsx
+```
+...
+//first we destructure the genre
+
+  const {
+      pageSize,
+      currentPage,
+      movies: allMovies,
+      selectedGenre,
+      genres
+    } = this.state;
+
+...
+
+//then we create the filtered movies
+
+const filtered = selectedGenre
+      ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+      : allMovies;
+    const movies = paginate(filtered, currentPage, pageSize); //if count is not 0 we will create an array of movies
+
+ ....   
+//and finally we will change the input of the string of movies and the itemsCount of the Pagination Component
+ <p>There are {filtered.length} movies in the database</p>
+         
+...
+
+          <Pagination
+            itemsCount={filtered.length}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={this.handlePageChange}
+          />
+
+```
