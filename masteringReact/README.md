@@ -716,3 +716,44 @@ const filtered = selectedGenre
           />
 
 ```
+
+##### listGroup-Adding all genres
+
+In componentDidMount we need to make an adjustment. Include the spread operator of all genres and set the state to this new list not forgeting that when setting the sate, if the name of the variable is the same as the object we are substituting, we can get rid of `:genres`:
+
+movies.jsx
+```
+...
+  componentDidMount() {
+    const genres = [{ name: "All Genres" }, ...getGenres()];
+    this.setState({ movies: getMovies(), genres});
+  }
+```
+
+But to show all the movies, we need to change the filtered constant. So we need to add another condition, if the selectedGenre has an id, apply the filtering if not, show all the movies.
+
+movies.jsx
+```
+...
+    const filtered =
+      selectedGenre && selectedGenre._id
+        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+        : allMovies;
+```
+
+But a bug arise. If we are in the second page and click the second page, we are trying to watch the second page of that genre instead of resseting the page for displaying all movies of that genre. To fix that we need to reset the page to 1.
+
+movies.jsx
+```
+...
+  handleGenreSelect = genre => {
+    //console.log(genre);
+    this.setState({ selectedGenre: genre, currentPage: 1 });
+  };
+
+```
+
+
+
+
+
