@@ -753,6 +753,103 @@ movies.jsx
 
 ```
 
+##### moviesTable Component
+
+Before continuing with the sorting component, we would have to worry only with high level components. If we see our render method in `movies.jsx` we can wrap that table in an external compoent just to make the render method more readable.
+
+First we create the `moviesTable.jsx` in the components directory. This file will be prefix with movies but later we will abstract it to have any number of objects in there:
+
+noviesTable.jsx
+```
+import React from "react";
+import Like from "../common/like";
+const MoviesTable = props => {
+  const { movies, onDelete, onLike } = props;
+  return (
+    <table className="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Genre</th>
+          <th>Stock</th>
+          <th>Rate</th>
+          <th />
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        {movies.map(movie => (
+          <tr key={movie._id}>
+            <td>{movie.title}</td>
+            <td>{movie.genre.name}</td>
+            <td>{movie.numberInStock}</td>
+            <td>{movie.dailyRentalRate}</td>
+            <td>
+              <Like liked={movie.liked} onClick={() => onLike(movie)} />
+            </td>
+            <td>
+              <button
+                onClick={() => onDelete(movie)}
+                className="btn btn-danger btn-sm ml-2"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+export default MoviesTable;
+
+```
+
+Then we can just call the function in movies.jsx not forgeting that the like component has to be in `moviesTable.jsx` and no any more in `movies.jsx`
+
+```
+...
+import MoviesTable from "./moviesTable";
+
+...
+
+return (
+      <div className="row">
+        <div className="col-3">
+          <ListGroup
+            items={genres}
+            selectedItem={selectedGenre}
+            onItemSelect={this.handleGenreSelect}
+          />
+        </div>
+        <div className="col">
+          <p>There are {filtered.length} movies in the database</p>
+          <MoviesTable
+            movies={movies}
+            onLike={this.handleLike}
+            onDelete={this.handleDelete}
+          />
+          <Pagination
+            itemsCount={filtered.length}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={this.handlePageChange}
+          />
+        </div>
+      </div>
+    );
+
+```
+
+Now the we have everything to start with the sorting component
+
+#### Sorting
+
+##### Sorting-Raising the sort event
+
+
+
 
 
 
