@@ -848,8 +848,39 @@ Now the we have everything to start with the sorting component
 
 ##### Sorting-Raising the sort event
 
+First we need to add another property (`onSort`) as a reference to the handleSort event. Cmd+d to select all the columns in the table of the MovesTable component:
 
+moviesTable.jsx
+```
+<thead>
+        <tr>
+          <th onClick ={() =>onSort('tittle')}>Title</th>
+          <th onClick ={() =>onSort('genre.name')}>Genre</th>
+          <th onClick ={() =>onSort('numberInStock')}>Stock</th>
+          <th onClick ={() =>onSort('dailyRentalRate')}>Rate</th>
+          <th />
+          <th />
+        </tr>
+```
 
+Now in the movies.sj we need to handle the sort even:
+
+movies.jsx
+```
+...
+handleSort = path =>{
+  console.log(path);
+}
+...
+
+          <MoviesTable
+            movies={movies}
+            onLike={this.handleLike}
+            onDelete={this.handleDelete}
+            onSort ={this.handleSort}
+          />
+
+```
 
 
 
