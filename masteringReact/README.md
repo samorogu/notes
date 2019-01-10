@@ -848,7 +848,7 @@ Now the we have everything to start with the sorting component
 
 ##### Sorting-Raising the sort event
 
-First we need to add another property (`onSort`) as a reference to the handleSort event. Cmd+d to select all the columns in the table of the MovesTable component:
+First we need to add another property (`onSort`) as a reference to the handleSort event. Cmd+d to select all the columns in the table of the MovesTable (4 times) component can be used when selecting the initial bracket and `th`:
 
 moviesTable.jsx
 ```
@@ -882,6 +882,76 @@ handleSort = path =>{
 
 ```
 
+Now that we have change the sort event, we have a warning within the listGroup Component, telling us that each item has to have a unique key. And this is because we manually added all genres. Now we have to set the key property to an empty string to fix this:
+
+movies.jsx
+```
+...
+componentDidMount() {
+    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
+    this.setState({ movies: getMovies(), genres });
+  }
+
+```
+##### Sorting-Implementing Sorting
+
+Now that the plumbing is correct for the handleSort, we have to implement it.
+
+So firt we go the handleSort function and edit the state that we will change afer:
+
+movies.jsx
+```
+ handleSort = path => {
+    console.log(path);
+    this.setState({ sortColumn: { path, order: "asc" } });
+  };
+```
+
+Then we have to create the property of the state that deals with the sorting:
+
+```
+...
+ state = {
+    movies: [], //until I use lifehooks, this will be the way I will set the state
+    genres: [], //For the purpous of this exercise will get the genres in component did mount
+    currentPage: 1, //current page in the pagination
+    pageSize: 4, //number of pages displayed
+    sortColumn: { path: "title", order: "asc" } //column sorted
+  };
+```
+
+and finally in the render method we will use underscore to sort the column:
+
+```
+import _ from "lodash";
+
+...
+
+const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const movies = paginate(sorted, currentPage, pageSize); //if count is not 0 we will create an array of movies
 
 
+```
+With this we can click on the on the column  that we wanth to sort the table .
 
+Now we have to implement the reverse order so in the handleSort we have to change a little bit the code:
+
+movies.jsx
+
+`  handleSort = path => {
+    //console.log(path);
+    const sortColumn = { ...this.state.sortColumn };
+    if (sortColumn.path === path)
+      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
+    else {
+      sortColumn.path = path;
+      sortColumn.order = "asc";
+    }
+
+    this.setState({ sortColumn });
+  };``
+
+```
+
+Just like other handlers, we first create a copy of the state, create the sorting order and setting the state 
