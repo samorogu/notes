@@ -954,4 +954,91 @@ movies.jsx
 
 ```
 
-Just like other handlers, we first create a copy of the state, create the sorting order and setting the state 
+Just like other handlers, we first create a copy of the state, create the sorting order and settle the state.
+
+##### Sorting-Moving responsibility
+
+The last implementation has a little problem, the handle sort we will have to edit it every time we need to change it. So we will change that.
+
+we will raise a sort event in movies table so this will not loger be a `stateless functional component`:
+
+moviesTable.jsx
+```
+import React, { Component } from "react";
+import Like from "../common/like";
+
+class MoviesTable extends Component {
+  raiseSort = path => {
+    const sortColumn = { ...this.props.sortColumn };
+    if (sortColumn.path === path)
+      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
+    else {
+      sortColumn.path = path;
+      sortColumn.order = "asc";
+    }
+    this.props.onSort(sortColumn);
+  };
+
+  render() {
+    const { movies, onDelete, onLike } = this.props;//we delete the onSort property because we don't need it any more
+    return (
+      <table className="table">
+        <thead>
+          <tr>
+            <th onClick={() => this.raiseSort("title")}>Title</th>
+            <th onClick={() => this.raiseSort("genre.name")}>Genre</th>
+            <th onClick={() => this.raiseSort("numberInStock")}>Stock</th>
+            <th onClick={() => this.raiseSort("dailyRentalRate")}>Rate</th>
+            <th />
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {movies.map(movie => (
+            <tr key={movie._id}>
+              <td>{movie.title}</td>
+              <td>{movie.genre.name}</td>
+              <td>{movie.numberInStock}</td>
+              <td>{movie.dailyRentalRate}</td>
+              <td>
+                <Like liked={movie.liked} onClick={() => onLike(movie)} />
+              </td>
+              <td>
+                <button
+                  onClick={() => onDelete(movie)}
+                  className="btn btn-danger btn-sm ml-2"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+}
+
+export default MoviesTable;
+
+```
+
+and then we will deal with the raised event:
+
+movies.jsx
+
+```
+...
+ handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+...
+          <MoviesTable
+            movies={movies}
+            sortColumn={sortColumn}
+            onLike={this.handleLike}
+            onDelete={this.handleDelete}
+            onSort={this.handleSort}
+          />
+
+```
