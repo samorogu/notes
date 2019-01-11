@@ -1042,3 +1042,77 @@ movies.jsx
           />
 
 ```
+##### Sorting-Extracting TableHeader
+
+
+If we have a table of custumers instead of movies we would have to duplicate a component, so now we will extract the tableheaders with an external header component. First we create the tableHeader component that will receive 3 things: an array of the columns, the sorted column object and the onSort function. This will be the component that will raise the event, moviesTable will buble them up and movies component will handle it.
+
+tableHeader.jsx
+```
+import React, { Component } from "react";
+
+class TableHeader extends Component {
+  //columns: array
+  //sortColumn: object
+  //onSort: function
+  raiseSort = path => {
+    const sortColumn = { ...this.props.sortColumn };
+    if (sortColumn.path === path)
+      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
+    else {
+      sortColumn.path = path;
+      sortColumn.order = "asc";
+    }
+    this.props.onSort(sortColumn);
+  };
+
+  render() {
+    return (
+      <thead>
+        <tr>
+          {this.props.columns.map(column => (
+            <th
+              key={column.path || column.key}
+              onClick={() => this.raiseSort(column.path)}
+            >
+              {column.label}
+            </th>
+          ))}
+        </tr>
+      </thead>
+    );
+  }
+}
+
+export default TableHeader;
+
+```
+Then we will create the columns within the Movies table, and add the sortColumn and onSort from the props that comes from the movie component:
+
+moviesTable.jsx
+
+```
+...
+import TableHeader from "../common/tableHeader";
+...
+  //it doesn't need to be within a state because it won't change in lifecycle hooks
+  columns = [
+    { path: "title", label: "Title" },
+    { path: "genre.name", label: "Genre" },
+    { path: "numberInStock", label: "Stock" },
+    { path: "dailyRentalRate", label: "Rate" },
+    { key: "like" },
+    { key: "delete" }
+  ];
+...
+   const { movies, onDelete, onLike, sortColumn, onSort } = this.props;
+    return (
+      <table className="table">
+        <TableHeader
+          columns={this.columns}
+          sortColumn={sortColumn}
+          onSort={onSort}
+        />
+
+```
+
