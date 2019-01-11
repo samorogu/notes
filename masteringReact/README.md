@@ -939,7 +939,8 @@ Now we have to implement the reverse order so in the handleSort we have to chang
 
 movies.jsx
 
-`  handleSort = path => {
+``` 
+ handleSort = path => {
     //console.log(path);
     const sortColumn = { ...this.state.sortColumn };
     if (sortColumn.path === path)
@@ -1090,7 +1091,6 @@ export default TableHeader;
 Then we will create the columns within the Movies table, and add the sortColumn and onSort from the props that comes from the movie component:
 
 moviesTable.jsx
-
 ```
 ...
 import TableHeader from "../common/tableHeader";
@@ -1116,3 +1116,29 @@ import TableHeader from "../common/tableHeader";
 
 ```
 
+##### Sorting-Extracting the tableBody
+
+Now that we have extract the table headers into a separated component, we need to extract it's body in a different component:
+tableBody.jsx
+```
+import React,{Component} from 'react';
+
+class TableBody extends Component{
+
+
+render(){
+
+const {data,columns}= props;
+
+return (
+ <tbody>
+        {data.map(item => <tr>
+          { columns.map(  column=> <td></td>)}
+                             </tr>
+                          )
+        }
+      </tbody>);
+   }
+}
+export default TableBody;
+```
