@@ -1128,7 +1128,7 @@ class TableBody extends Component{
 
 render(){
 
-const {data,columns}= props;
+const {data,columns}= this.props;
 
 return (
  <tbody>
@@ -1142,3 +1142,115 @@ return (
 }
 export default TableBody;
 ```
+
+##### Sorting-Rendering Cell Content
+
+Next we need to render each cell. So the first thing is for each column yo need to access the column path `item[column.path]` but this doesn't work for nested properties like `'genre.name'`. Instead we will use lodash.
+
+tableBody.jsx
+```
+          <tr>
+            {columns.map(column => (
+              <td>{_.get(item, column.path)}</td>
+            ))}
+          </tr>
+```
+
+Now returning to moviesTable.jsx we will comment the tbody with cmd+/ selecting what we want to comment. With this we only are missing the like and delete button and dealing with unique key in each cell.
+
+First we will deal with the buttons: Each component in essence  is a pure javascript object so in the columns we can declare components as properties:
+
+moviesTable.jsx
+```
+...
+  columns = [
+    { path: "title", label: "Title" },
+    { path: "genre.name", label: "Genre" },
+    { path: "numberInStock", label: "Stock" },
+    { path: "dailyRentalRate", label: "Rate" },
+    {
+      key: "like",
+      content: <Like liked={movie.liked} onClick={() => onLike(movie)} />
+    },
+    {
+      key: "delete",
+      content: (
+        <button
+          onClick={() => onDelete(movie)}
+          className="btn btn-danger btn-sm ml-2"
+        >
+          Delete
+        </button>
+      )
+    }
+  ];
+
+```
+
+If we compile uppon this we will get an error in moviesTable because we have a reference to movie.  to handle this we can use an arrow function in the property and reference each of the props properties to this.props:
+
+moviesTable.jsx
+
+```
+...
+ columns = [
+    { path: "title", label: "Title" },
+    { path: "genre.name", label: "Genre" },
+    { path: "numberInStock", label: "Stock" },
+    { path: "dailyRentalRate", label: "Rate" },
+    {
+      key: "like",
+      content: movie => (
+        <Like liked={movie.liked} onClick={() => this.props.onLike(movie)} />
+      )
+    },
+    {
+      key: "delete",
+      content: movie => (
+        <button
+          onClick={() => this.props.onDelete(movie)}
+          className="btn btn-danger btn-sm ml-2"
+        >
+          Delete
+        </button>
+      )
+    }
+  ];
+
+```
+
+If we go to table Body the logic to return each cell of the table only takes the path property so we will make a function to return the path or another property:
+tableBody.jsx
+```
+class TableBody extends Component {
+  renderCell = (item, column) => {
+    if (column.content) return column.content(item);
+
+    return _.get(item, column.path);
+  };
+
+  render() {
+    const { data, columns } = this.props;
+    return (
+      <tbody>
+        {data.map(item => (
+          <tr>
+            {columns.map(column => (
+              <td>{this.renderCell(item, column)}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    );
+  }
+}
+
+export default TableBody;
+```
+
+Everything works but we will deal with the key next.
+
+
+##### Sorting-Rendering-Unique Keys
+
+
