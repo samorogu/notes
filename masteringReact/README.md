@@ -1284,3 +1284,51 @@ and finally in moviesTable we will delete the reference of onLike and onDelete b
 
 ##### Sorting-Adding the sort icon
 
+To create the logic of the the sort icon, we will create a function and put the input of that function:
+
+tableHeader.jsx
+```
+ renderSortIcon = column =>{
+    if (column.path !== this.props.sortColumn.path) return null;
+    if (this.props.sortColumn.order==='asc' return i.fa.fa-sort-asc;//snippet to get the icon
+    return i.fa.fa-sort-desc;//else we will return the descending order
+  };
+
+  ...
+        <thead>
+        <tr>
+          {this.props.columns.map(column => (
+            <th
+              key={column.path || column.key}
+              onClick={() => this.raiseSort(column.path)}
+            >
+              {column.label} {this.renderSortIcon(column)}
+            </th>
+          ))}
+        </tr>
+      </thead>
+
+```
+Finally we will create a css class to make it visible the click icon:
+
+index.css:
+```
+...
+.clickable {
+  cursor: pointer;
+}
+```
+and include that class to tableHeader.jsx:
+
+```
+...
+            <th
+              className="clickable"
+              key={column.path || column.key}
+              onClick={() => this.raiseSort(column.path)}
+            >
+              {column.label} {this.renderSortIcon(column)}
+            </th>
+
+
+```
