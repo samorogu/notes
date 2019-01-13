@@ -1253,4 +1253,34 @@ Everything works but we will deal with the key next.
 
 ##### Sorting-Rendering-Unique Keys
 
+Each row  and cell we need to give it a unique key. So we will create a function for dealing with this key:
+
+tableBody.jsx
+```
+...
+  createKey = (item, column) => {
+    return item._id + (column.path || column.key);
+  };
+
+  render() {
+    const { data, columns } = this.props;
+    return (
+      <tbody>
+        {data.map(item => (
+          <tr key={item._id}>
+            {columns.map(column => (
+              <td key={this.createKey(item, column)}>
+                {this.renderCell(item, column)}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    );
+  }
+}
+```
+and finally in moviesTable we will delete the reference of onLike and onDelete because we  used when we include the like and delete content in the columns properties. Now we only missing the sort icon.
+
+##### Sorting-Adding the sort icon
 
