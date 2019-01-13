@@ -1409,4 +1409,29 @@ movies.jsx
 
     const { totalCount, data: movies } = this.getPagedData();
 ```
+##### Sorting-Destructuring arguments
 
+
+Finally we will make a little bit more cleaner the code within the sfc like table and pagination and substitue the destructoring constant within the props parameter:
+
+table.jsx
+```
+...
+const Table = ({ columns, sortColumn, onSort, data }) => {
+  return (
+    <table className="table">
+      <TableHeader columns={columns} sortColumn={sortColumn} onSort={onSort} />
+      <TableBody columns={columns} data={data} />
+    </table>
+  );
+};
+
+```
+
+pagination.jsx
+
+```
+...
+const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange })
+
+```
