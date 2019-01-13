@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Like from "../common/like";
-import TableHeader from "../common/tableHeader";
-import TableBody from "../common/tableBody";
+import Table from "../common/table";
 
 class MoviesTable extends Component {
   //it doesn't need to be within a state because it won't change in lifecycle hooks
@@ -32,14 +31,12 @@ class MoviesTable extends Component {
   render() {
     const { movies, sortColumn, onSort } = this.props;
     return (
-      <table className="table">
-        <TableHeader
-          columns={this.columns}
-          sortColumn={sortColumn}
-          onSort={onSort}
-        />
-        <TableBody columns={this.columns} data={movies} />
-      </table>
+      <Table
+        columns={this.columns}
+        sortColumn={sortColumn}
+        onSort={onSort}
+        data={movies}
+      />
     );
   }
 }

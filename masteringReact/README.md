@@ -1332,3 +1332,45 @@ and include that class to tableHeader.jsx:
 
 
 ```
+
+##### Sorting- Extracting Table 
+
+We will make a table component to easily use it because it is a little messy to declare the header and body with the same columns.
+
+table.jsx
+```
+import React from "react";
+import TableHeader from "./tableHeader";
+import TableBody from "./tableBody";
+
+const Table = props => {
+  const { columns, sortColumn, onSort, data } = props;
+  return (
+    <table className="table">
+      <TableHeader columns={columns} sortColumn={sortColumn} onSort={onSort} />
+      <TableBody columns={columns} data={data} />
+    </table>
+  );
+};
+
+export default Table;
+```
+
+and then we will call this component in moviesTable:
+
+```
+...
+  render() {
+    const { movies, sortColumn, onSort } = this.props;
+    return (
+      <Table
+        columns={this.columns}
+        sortColumn={sortColumn}
+        onSort={onSort}
+        data={movies}
+      />
+    );
+  }
+```
+
+Now we can reuse the table component with other things like customers 
