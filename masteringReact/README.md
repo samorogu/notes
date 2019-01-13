@@ -1374,3 +1374,39 @@ and then we will call this component in moviesTable:
 ```
 
 Now we can reuse the table component with other things like customers 
+
+##### Sorting- Extracting a method
+
+We will wrap all the logic of filtering, sorting the movies in a diferent method to make the render function more cleaner:
+
+movies.jsx
+```
+
+...
+
+  getPagedData = () => {
+    const {
+      pageSize,
+      currentPage,
+      sortColumn,
+      movies: allMovies,
+      selectedGenre
+    } = this.state;
+
+    const filtered =
+      selectedGenre && selectedGenre._id
+        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+        : allMovies;
+
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const movies = paginate(sorted, currentPage, pageSize); //if count is not 0 we will create an array of movies
+
+    return { totalCount: filtered.length, data: movies };
+  };
+
+  ...
+
+    const { totalCount, data: movies } = this.getPagedData();
+```
+
