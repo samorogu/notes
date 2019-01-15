@@ -1435,3 +1435,9 @@ pagination.jsx
 const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange })
 
 ```
+
+#### Routing
+
+##### Set up
+
+First we will install the extension called auto Import to automatically import components. then we will install the dependences of router-app: `npm i`. Then if we hit `npm run` we will render a simple routing setup.
