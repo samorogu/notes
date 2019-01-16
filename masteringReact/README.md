@@ -1441,3 +1441,7 @@ const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange })
 ##### Set up
 
 First we will install the extension called auto Import to automatically import components. then we will install the dependences of router-app: `npm i`. Then if we hit `npm run` we will render a simple routing setup.
+
+React is only a frontend framework so it doesn't deals with routing so we will install: `npm i react-router-dom@4.3.1`.
+
+Now to add routing we will need to import it in index.js with the snipet:`import {BrowserRouter} from rrd+enter`-> `import {BrowserRouter} from 'react-router-dom';`
