@@ -1445,3 +1445,6 @@ First we will install the extension called auto Import to automatically import c
 React is only a frontend framework so it doesn't deals with routing so we will install: `npm i react-router-dom@4.3.1`.
 
 Now to add routing we will need to import it in index.js with the snipet:`import {BrowserRouter} from rrd+enter`-> `import {BrowserRouter} from 'react-router-dom';`
+
+
+Next we need to resolve the problem that the route isnt rendering
