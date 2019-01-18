@@ -1446,5 +1446,38 @@ React is only a frontend framework so it doesn't deals with routing so we will i
 
 Now to add routing we will need to import it in index.js with the snipet:`import {BrowserRouter} from rrd+enter`-> `import {BrowserRouter} from 'react-router-dom';`
 
+Next we need to resolve the problem that the route isn't rendering. It was only the the parameter of the router was in capital letter.
 
-Next we need to resolve the problem that the route isnt rendering
+Starting with the code given by Mosh, first in index.js we will incorporate  the `BrowserRouter` wrapper:
+
+index.js
+```
+...
+import { BrowserRouter } from "react-router-dom";
+...
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById("root")
+);
+```
+
+Then we will incorporate the routing to each component:
+
+App.js
+```
+...
+import { Route } from "react-router-dom";
+...
+      <div>
+        <NavBar />
+        <div className="content">
+          <Route path="/products" component={Products} />
+          <Route path="/posts" component={Posts} />
+          <Route path="/admin" component={Dashboard} />
+          <Route path="/" component={Home} />
+        </div>
+      </div>
+    );
+```
