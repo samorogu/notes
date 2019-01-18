@@ -1513,7 +1513,7 @@ import { Route, Switch } from "react-router-dom";
 
 ##### Routing - Link
 
-To not make the server reload everything when we click on each href, we need to make some adjustments.We don't need to render again and again the bundle.js:
+To not make the server reload everything when we click on each href, we need to make some adjustments.We don't need to render again and again the bundle.js with http requests:
 
 navbar.jsx
 ```
@@ -1539,4 +1539,14 @@ import { Link } from "react-router-dom";
 
 
 ```
+##### Routing - Props
+
+If we inspect in the react addon of chrom we can see that the Products components has 3 props (history, location and match). This props are injected because we wrap them with the Router component.
+
+1. History can be used to redirect a user
+2. Status is the current state of the object
+3. Match contains information this url match the past we set in the route.
+
+##### Passing Props
+
 
