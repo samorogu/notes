@@ -1511,3 +1511,32 @@ import { Route, Switch } from "react-router-dom";
 
 ```
 
+##### Routing - Link
+
+To not make the server reload everything when we click on each href, we need to make some adjustments.We don't need to render again and again the bundle.js:
+
+navbar.jsx
+```
+...
+import { Link } from "react-router-dom";
+...
+  return (
+    <ul>
+      <li>
+        <Link to="/">Home</Link>
+      </li>
+      <li>
+        <Link to="/products">Products</Link>
+      </li>
+      <li>
+        <Link to="/posts/2018/06">Posts</Link>
+      </li>
+      <li>
+        <Link to="/admin">Admin</Link>
+      </li>
+    </ul>
+  );
+
+
+```
+
