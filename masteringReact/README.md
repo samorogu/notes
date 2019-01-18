@@ -1545,7 +1545,7 @@ If we inspect in the react addon of chrom we can see that the Products component
 
 1. History can be used to redirect a user
 2. Status is the current state of the object
-3. Match contains information this url match the past we set in the route.
+3. Match contains information this url has that we set on the route.
 
 ##### Passing Props
 
@@ -1559,5 +1559,51 @@ Apps.js
             />
 
 ```
+##### Route Parameters 
+
+parameters can be pass to a route. In this case if we click on the product, the route will be updated with the number of product:
+
+App.js
+
+```
+...
+
+          <Switch>
+            <Route path="/products/:id" component={ProductDetails} />
+            <Route
+              component={props => <Products sortBy="newest" {...props} />}
+            />
+
+```
+
+Then if we go to the productDetails.jsx we can render the product id with the param :
+
+```
+...
+      <div>
+        <h1>Product Details - {this.props.match.params.id} </h1>
+        <button onClick={this.handleSave}>Save</button>
+      </div>
+
+
+```
+Finally we will change the anchor on each product to avoid reloading the page:
+
+products.jsx
+```
+...
+        <ul>
+          {this.state.products.map(product => (
+            <li key={product.id}>
+              <Link to={`/products/${product.id}`}>{product.name}</Link>
+            </li>
+          ))}
+        </ul>
+
+```
+
+
+
+
 
 
