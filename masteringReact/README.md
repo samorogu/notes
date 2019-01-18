@@ -1549,4 +1549,15 @@ If we inspect in the react addon of chrom we can see that the Products component
 
 ##### Passing Props
 
+For passing the props of a component to a Route component we need to change the code a little. Also wee need to use the spread operator that can be used in jsx to copy the props given by Route:
+
+Apps.js
+```
+            <Route
+              path="/products"
+              component={props => <Products sortBy="newest" {...props} />}
+            />
+
+```
+
 
