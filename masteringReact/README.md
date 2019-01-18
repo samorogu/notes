@@ -1602,8 +1602,34 @@ products.jsx
 
 ```
 
+##### Optional Parameters 
 
+If we go to the url `http://localhost:3000/posts/2018` we can see that it redirected to the home path. That is because it is not a valid url so automatically it will go to the home route. To fix this we need to append an optional parameter:
 
+App.js
+
+```
+ <Route path="/posts/:year?/:month?" component={Posts} />
+
+```
+
+And in the Posts Component get those parameter to render the year and the month applying object destructuring inside the parameters of the sfc:
+
+posts.jsx
+```
+import React from "react";
+
+const Posts = ({ match }) => {
+  return (
+    <div>
+      <h1>Posts</h1>
+      Year: {match.params.year} , Month:{match.params.month}
+    </div>
+  );
+};
+
+export default Posts;
+```
 
 
 
