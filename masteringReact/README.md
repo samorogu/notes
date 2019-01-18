@@ -1481,3 +1481,33 @@ import { Route } from "react-router-dom";
       </div>
     );
 ```
+
+##### Routing - Switch
+
+The last implementation piles the home content with other routes because the page will be render if it matches the path: `/` is the home path and it will be render because `/products` has an `/` we need to fix that. One solution is to use the exact path:
+
+App.js
+```
+...
+<Route path="/" exact component={Home} />
+```
+And another solution is to use switch. We need to order our routes from the more especific routes to most generic ones:
+
+App.js
+```
+...
+import { Route, Switch } from "react-router-dom";
+...
+
+        <div className="content">
+          <Switch>
+            <Route path="/products" component={Products} />
+            <Route path="/posts" component={Posts} />
+            <Route path="/admin" component={Dashboard} />
+            {/* <Route path="/" exact component={Home} /> */}
+            <Route path="/" component={Home} />
+          </Switch>
+        </div>
+
+```
+
