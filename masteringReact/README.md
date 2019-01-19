@@ -1630,6 +1630,21 @@ const Posts = ({ match }) => {
 
 export default Posts;
 ```
+##### Routing Query String parameters
 
+Optional parameters should be avoid. In this exercise it has no problem, but they have to be included in query strings. If we check the react tool, we can see that the query string parameters are in the location parameter. To extract this parameters there is a better way instead of manually looking for this. We need to installl: `npm i query-string@6.1.0`.
+
+After we install the package, we can go to the  go to the posts component an see what does the console logs if we include the query string:
+
+post.jsx
+
+```
+...
+import queryString from "query-string";
+...
+
+const result = queryString.parse(location.search);
+
+```
 
 
