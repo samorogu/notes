@@ -1647,4 +1647,32 @@ const result = queryString.parse(location.search);
 
 ```
 
+##### Routing Redirects
 
+What happens if we have an invalidate page: `/xyz` we go to the home component, so we need to change this behavior. As we did in the switch lecture, we can use the exact property in the home path to avoid the home rendering. But the ideal would be to render a not found page.
+
+For this we need to go to the app.js and redirect if nothing matches the previous routes:
+
+
+```
+...
+import { Route, Switch, Redirect } from "react-router-dom";
+...
+            <Route path="/posts/:year?/:month?" component={Posts} />
+            <Route path="/admin" component={Dashboard} />
+            <Route path="/not-found" component={NotFound} />
+            <Route path="/" exact component={Home} />
+            <Redirect to="/not-found" />{/*  render else*/}
+
+
+```
+
+Also if we want an specific route to redirect to a route we need to make that:
+
+```
+            <Route path="/admin" component={Dashboard} />
+            <Redirect from="/messages" to="/post" />{/*  Redirection from to*/}
+            <Route path="/not-found" component={NotFound} />
+            <Route path="/" exact component={Home} />
+            <Redirect to="/not-found" />
+```
