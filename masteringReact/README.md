@@ -1676,3 +1676,19 @@ Also if we want an specific route to redirect to a route we need to make that:
             <Route path="/" exact component={Home} />
             <Redirect to="/not-found" />
 ```
+
+##### Routing Programmatic Navigation
+
+There are times that we want to redirect a user if they cick a button (programmatic navigation).
+In the product list if a button clicks that button we can go back to the product parent. In the history object we can find various methods as going forward, backward, push and replace, etc. The diference between push and replace is that replace if a user clicks the go back button after clicking a button, it wont return the the previous link: useful in log in aplications.
+
+productDetails.jsx
+```
+...
+  handleSave = () => {
+    // Navigate to /products
+    //this.props.history.push("/products");//with this you can return with back
+    this.props.history.replace("/products"); //back button won't work after click save in the product detail
+  };
+
+```
