@@ -1692,3 +1692,65 @@ productDetails.jsx
   };
 
 ```
+
+##### Routing Nested Routing
+
+Now we will have different level of routing and for that we will go to the dashboard.sjx inside the admin directory and add 2 links `  ul>(li>Link[to=''])*2 + tab':
+
+```
+...
+import Link from 'react-router-dom';
+...
+
+  return (
+    <div>
+      <h1>Admin Dashboard</h1>
+      <ul>
+        <li>
+          <Link to=""></Link>
+        </li>
+        <li>
+          <Link to=""></Link>
+        </li>
+      </ul>
+    </div>
+  );
+```
+
+But the posts and Users Components would needed to appeared in a sidebar, so we will create it:
+
+./admin/sidebar.jsx
+```
+import React from "react";
+import { Link } from "react-router-dom";
+
+const SideBar = () => {
+  return (
+    <ul>
+      <li>
+        <Link to="/admin/posts">Posts</Link>
+      </li>
+      <li>
+        <Link to="/admin/users">Users</Link>
+      </li>
+    </ul>
+  );
+};
+
+export default SideBar;
+```
+
+Now that we defined  a nested link component we will use it in the dashboard, importing the necessary components and defining the route defined to access the users and posts.
+
+.admin/sidebar.jsx
+```
+  return (
+    <div>
+      <h1>Admin Dashboard</h1>
+      <SideBar />
+      <Route path="/admin/users" component={Users} />
+      <Route path="/admin/posts" component={Posts} />
+    </div>
+  );
+
+```
