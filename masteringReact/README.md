@@ -1752,5 +1752,37 @@ Now that we defined  a nested link component we will use it in the dashboard, im
       <Route path="/admin/posts" component={Posts} />
     </div>
   );
+```
+
+##### Routing Adding react router to vidley project
+
+Now we will return to the vidley project. First we will install `npm i react-router-dom@4.3.1`. Then in app.js we will wrap our component to enable routing:
 
 ```
+import { BrowserRouter } from "react-router-dom";
+...
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById("root")
+);
+
+```
+
+Then we will create 4 state less components, all with the same structure: movieForm,notFound,rentals and components:
+
+/components/ customers.jsx movieForm.jsx notFound.jsx rentals.jsx
+
+```
+import React from "react";
+
+const Customers = () => {
+  return <h1>Customers</h1>;
+};
+
+export default Customers;
+
+```
+
+##### Routing Adding react routes
