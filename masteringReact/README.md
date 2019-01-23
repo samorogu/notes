@@ -1786,3 +1786,71 @@ export default Customers;
 ```
 
 ##### Routing Adding react routes
+
+Now we will go the the app.js and import react router dom and apply zen snippet while changing on down to the left the language to javascrcipt react(`Route[path][component]*4`) and import the 4 components that will have a route:
+
+```
+import React, { Component } from "react";
+import { Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.css";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import "./App.css";
+
+class App extends Component {
+  render() {
+    return (
+      <React.Fragment>
+        <main className="container">
+          <Route path="/movies" component={Movies} />
+          <Route path="/customers" component={Customers} />
+          <Route path="/rentals" component={Rentals} />
+          <Route path="/not-found" component={NotFound} />
+        </main>
+      </React.Fragment>
+    );
+  }
+}
+
+export default App;
+
+```
+
+Currently there will be not home page but if go to the movie route, we will se that component. Now we need to redirect the home page to movies and if any other route is put, it redirect exactly to that route with Switch:
+
+```
+...
+import { Route, Redirect, Switch } from "react-router-dom";
+...
+        <main className="container">
+          <Switch>
+            <Route path="/movies" component={Movies} />
+            <Route path="/customers" component={Customers} />
+            <Route path="/rentals" component={Rentals} />
+            <Route path="/not-found" component={NotFound} />
+            <Redirect from="/" to="movies" />
+            <Redirect to="not-found" />
+          </Switch>
+        </main>
+
+```
+
+But to redirect exactly to the home page if any other route is given we need to explicity put exact to the home page:
+
+```
+...
+          <Switch>
+            <Route path="/movies" component={Movies} />
+            <Route path="/customers" component={Customers} />
+            <Route path="/rentals" component={Rentals} />
+            <Route path="/not-found" component={NotFound} />
+            <Redirect from="/" exact to="movies" />
+            <Redirect to="not-found" />
+          </Switch>
+```
+
+
+
+
