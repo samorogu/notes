@@ -1851,6 +1851,91 @@ But to redirect exactly to the home page if any other route is given we need to 
           </Switch>
 ```
 
+##### Routing Adding the navBar
+
+
+We will create in the components a file called navBar and go to the bootstrap documentation and go to the [navbar](https://getbootstrap.com/docs/4.1/components/navbar/).
+
+Then we will extract the simple navbar and change the `class` with `className`, with vsc and mac we can type cmd+f2 to select all occurrences that we want to change, similarly we will change the anchor `a` tag with `NavLink` and finally all the `href` to `to`.
+
+Next we will change the main name of our aplication "Vidly" and change the NavLink to Link because we dont want the active class and change the route and include the others routes deleting the disable button. We dont have to forget that we also delete the active class.
+
+./navBar.jsx
+```
+import React from "react";
+import { Link, NavLink } from "react-router-dom";
+const NavBar = () => {
+  return (
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <Link className="navbar-brand" to="/">
+        Vidly
+      </Link>
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon" />
+      </button>
+      <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div className="navbar-nav">
+          <NavLink className="nav-item nav-link" to="/movies">
+            Movies
+          </NavLink>
+          <NavLink className="nav-item nav-link" to="/customers">
+            Customers
+          </NavLink>
+          <NavLink className="nav-item nav-link" to="/rentals">
+            Rentals
+          </NavLink>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default NavBar;
+
+
+```
+
+Next we will go to app.js and include the Navbar:
+
+```
+...
+import NavBar from "./components/navBar";
+...
+      <React.Fragment>
+        <NavBar />
+        <main className="container">
+          <Switch>
+            <Route path="/movies" component={Movies} />
+            <Route path="/customers" component={Customers} />
+            <Route path="/rentals" component={Rentals} />
+            <Route path="/not-found" component={NotFound} />
+            <Redirect from="/" exact to="movies" />
+            <Redirect to="not-found" />
+          </Switch>
+        </main>
+      </React.Fragment>
+
+```
+
+Next we will quickly fix the padding of the navbar:
+
+index.css
+```
+...
+.navbar {
+  margin-bottom: 30px;
+}
+
+```
+
 
 
 
