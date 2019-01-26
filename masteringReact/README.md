@@ -2102,3 +2102,28 @@ We will delete the action attribute, we don't need that. Next we will specify th
 
 ```
 
+##### Form-Handling form submission 
+
+Each time a user login, it takes a full round trip to the server, reloading the page completely. We don't want that for the app. We will include a handleSubmit and only take the data if we need one:
+
+loginForm.jsx
+```
+...
+  handleSubmit = e => {
+    e.preventDefault();
+    //call the server
+    console.log("submitted");
+  };
+
+        <form on onSubmit={this.handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input id="username" type="text" className="form-control" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input id="password" type="text" className="form-control" />
+          </div>
+          <button className="btn btn-primary">Login</button>
+        </form>
+```
