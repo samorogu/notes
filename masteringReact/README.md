@@ -2007,3 +2007,98 @@ const MovieForm = ({ match, history }) => {
 };
 
 ```
+
+#### Forms
+
+##### Building a bootstrap form
+
+First we will create a loginForm in the components directory.
+
+.components/loginForm.jsx
+
+```
+import React,{Component} from "react";
+
+class LoginForm extends Component {
+  render() {
+    return <h1>Login</h1>;
+  }
+}
+
+export default LoginForm;
+```
+
+Now we will register another route in app.js:
+
+```
+...
+import LoginForm from "./component/loginForm";
+...
+<Route path="/login" component={LoginForm} />
+``
+
+Next we need to include a link to the navbar:
+
+.components/navbar.jsx
+```
+...
+
+          <NavLink className="nav-item nav-link" to="/login">
+            Login
+          </NavLink>
+
+```
+
+If we test our application until this point we will se the new tab to the login.Nex we go the the bootstrap [forms](https://getbootstrap.com/docs/4.1/components/forms/).
+
+Before anything we will need to  wrap our return login in a div.The is a snippet that can wrap this up: `cmd+shift+p` then it will appear a textbox that we will write wrap and then the wrapping tag: `div`. It can also accept zen code, for example instead of a div, we can specify the class container `div container` but for now we only need the `div` wrapper:
+
+loginForm.jsx
+```
+  render() {
+    return <div>
+      <h1>Login</h1>
+    </div>;
+  }
+```
+
+Next, just behind the h1 tag, we will include the next snippet:
+`form>(div.form-group>label+input.form-control)*2`:
+
+```
+    return (<div>
+      <h1>Login</h1>
+      <form action="">
+        <div className="form-group"><label htmlFor=""></label><input type="text" className="form-control"/></div>
+        <div className="form-group"><label htmlFor=""></label><input type="text" className="form-control"/></div>
+      </form>
+    </div>);
+
+```
+
+We will delete the action attribute, we don't need that. Next we will specify the id for the input in the username that needs to be the same for the htmlFor attribute(this is like the class property, it is a reserved key and that's why we need to put it that way). For editting two different parts of a code, we can arbitrary put the cursor and press down the alt key to [edit multiple parts of the code](https://stackoverflow.com/questions/30037808/multiline-editing-in-vscode). And finally we need a button: `button.btn.btn-primary`:
+
+.components/loginForm.jsx
+```
+...
+  return (
+      <div>
+        <h1>Login</h1>
+        <form>
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input id="username" type="text" className="form-control" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input id="password" type="text" className="form-control" />
+          </div>
+          <button className="btn btn-primary">Login</button>
+        </form>
+      </div>
+    );
+  }
+...
+
+```
+
