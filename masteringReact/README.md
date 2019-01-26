@@ -1936,6 +1936,74 @@ index.css
 
 ```
 
+##### Routing Adding the linking to the movieForm
+
+Now in each movie rendered in the table we will link it with a Link component with a template literal(dinamically instert values into strings):
+
+moviesTable.jsx
+```
+...
+import { Link } from "react-router-dom";
+...
+{
+      path: "title",
+      label: "Title",
+      content: movie => <Link to={`/movies/${movie._id}`}>{movie.title} </Link>
+    }
+
+```
+
+Next we will add the valid route to render:
+
+app.js
+```
+import Movies from "./components/movies";
+...
+          <Switch>
+            <Route path="/movies/:id" component={MovieForm} />
+            <Route path="/movies" component={Movies} />
+            <Route path="/customers" component={Customers} />
+            <Route path="/rentals" component={Rentals} />
+            <Route path="/not-found" component={NotFound} />
+            <Redirect from="/" exact to="movies" />
+            <Redirect to="not-found" />
+          </Switch>
+...
+
+```
+Next we will include the id of the move in the tittle of the movie form:
+movieForm.jsx. For this we will use object destructuring to get the match property from props.
+```
+...
+const MovieForm = ({ match }) => {
+  return <h1>Movie Form {match.params.id} </h1>;
+};
+```
+
+Finally we will include 2 buttons:
 
 
 
+const MovieForm = ({ match }) => {
+  return <div>
+    <h1>Movie Form {match.params.id} </h1>
+    button.bt.bt-primary {/*snippet*/}
+    </div> ;
+};
+
+Because we are using a fsc, we cannot used handleSave, so we will use an arrow function to handle the onClick event that returns to the MoviesTable component:
+
+movieForm.jsx
+```
+const MovieForm = ({ match, history }) => {
+  return (
+    <div>
+      <h1>Movie Form {match.params.id} </h1>
+      <button className="bt bt-primary" onClick={() => history.push("/movies")}>
+        Save
+      </button>
+    </div>
+  );
+};
+
+```
