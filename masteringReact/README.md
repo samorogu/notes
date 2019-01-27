@@ -2127,3 +2127,48 @@ loginForm.jsx
           <button className="btn btn-primary">Login</button>
         </form>
 ```
+##### Form-Refs
+
+In vanilla js to get the text of a form the next could be applied: `const username = document.getElementByID('username').value;` but this would get the dom and in react we don't want to work with the virtual dom because it is easier to maintain the code. If you want to access necessarily to an element, you can use ref but don't use it too often:
+
+loginForm.jsx
+```
+ username = React.createRef();
+
+  componentDidMount() {
+    this.username.current.focus();
+  }
+  handleSubmit = e => {
+    e.preventDefault();
+    //call the server
+    const username = this.username.current.value;
+    console.log("submited");
+  };
+  ...
+  <input
+              ref={this.username}
+              id="username"
+              type="text"
+              className="form-control"
+            />
+
+```
+This can be applied if we include the focus in the input instead of using `componentDidMount()` also using the `autoFocus` attribute :
+
+```
+...
+  // componentDidMount() {
+  //   this.username.current.focus();
+  // }
+
+              <input
+              autoFocus
+              ref={this.username}
+              id="username"
+              type="text"
+              className="form-control"
+            />
+
+```
+
+
