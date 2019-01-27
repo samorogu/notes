@@ -2210,3 +2210,44 @@ loginForm.jsx
 Now if go to the devtool, we will see that the component of the input username change if the user types.
 
 ##### Form-Handling multiple inputs
+
+In the current implementation we only are aware of the changes in the username property. We need to be aware also of the password property. If we need to change a parameter, we will used the bracket notation instead of the dot notation. Then instead of hardcoding or using a different method, we will use the same method to be aware of the changes:
+
+loginForm.jsx
+```
+...
+ handleChange = ({ currentTarget: input }) => {
+    const account = { ...this.state.account };
+    account[input.name] = input.value;
+    this.setState({ account });
+  };
+...
+const { account } = this.state;
+...
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              value={account.username} //props to set its value
+              onChange={this.handleChange} //update the state when the user types
+              // autoFocus
+              // ref={this.username}
+              id="username"
+              name="username"
+              type="text"
+              className="form-control"
+            />
+          </div>
+          ...
+                    <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              value={account.password}
+              onChange={this.handleChange}
+              name="password"
+              id="password"
+              type="text"
+              className="form-control"
+            />
+          </div>
+```
+
