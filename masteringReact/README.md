@@ -2171,4 +2171,42 @@ This can be applied if we include the focus in the input instead of using `compo
 
 ```
 
+##### Form-Controlled Elements
 
+Next we will include a state to the loginForm:
+
+loginForm.jsx
+```
+...
+state = {
+    account: { username: "", password: "" }
+  };
+
+```
+If we type something in the username box and go to the react dev tool, we will search for the login form. The state object doesn't get notify for the change because it needs a single state of true. We need to get ride of the state of the box by change it to a controlled element. For this we need to get the value of the input box from the state and when it change, update the state:
+
+loginForm.jsx
+```
+...
+  handleChange = e =>{
+    const account = {...this.state.account};
+    account.username = e.currentTarget.value;
+    this.setState({account});
+  };
+...
+
+ <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input value = {this.state.account.username}//props to set its value
+              onChange= {this.handleChange}//update the state when the user types
+              id="username"
+              type="text"
+              className="form-control"
+            />
+          </div>
+
+``` 
+
+Now if go to the devtool, we will see that the component of the input username change if the user types.
+
+##### Form-Handling multiple inputs

@@ -1,28 +1,40 @@
 import React, { Component } from "react";
 
 class LoginForm extends Component {
-  username = React.createRef();
+  //username = React.createRef();
 
   // componentDidMount() {
   //   this.username.current.focus();
   // }
+  state = {
+    account: { username: "", password: "" }
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     //call the server
-    const username = this.username.current.value;
+    //const username = this.username.current.value;
     console.log("submited");
+  };
+
+  handleChange = e => {
+    const account = { ...this.state.account };
+    account.username = e.currentTarget.value;
+    this.setState({ account });
   };
 
   render() {
     return (
       <div>
         <h1>Login</h1>
-        <form on onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
-              autoFocus
-              ref={this.username}
+              value={this.state.account.username} //props to set its value
+              onChange={this.handleChange} //update the state when the user types
+              // autoFocus
+              // ref={this.username}
               id="username"
               type="text"
               className="form-control"
@@ -40,5 +52,3 @@ class LoginForm extends Component {
 }
 
 export default LoginForm;
-
-Use ref only if you really have to.
