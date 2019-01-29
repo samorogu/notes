@@ -2251,3 +2251,7 @@ const { account } = this.state;
           </div>
 ```
 
+##### Form-Common errors
+
+
+If we remove a property that it is used in the state and we are aware of its changes with controlled  elements, React will throw an error that we initialize an uncontrolled element and next we redefined it as a controlled element. The same happen if we put NULL in a property. A property in the state cannot be undefined or null.
