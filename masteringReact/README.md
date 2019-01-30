@@ -2254,4 +2254,60 @@ const { account } = this.state;
 ##### Form-Common errors
 
 
-If we remove a property that it is used in the state and we are aware of its changes with controlled  elements, React will throw an error that we initialize an uncontrolled element and next we redefined it as a controlled element. The same happen if we put NULL in a property. A property in the state cannot be undefined or null.
+If we remove a property that it is used in the state and we are aware of its changes with controlled  elements `account: {password:""}`, React will throw an error that we initialize an uncontrolled element and next we redefined it as a controlled element. The same happen if we put NULL in a property. A property in the state cannot be undefined or null.
+
+
+##### Form-Extracting a reusable input
+
+If we see our input form, we can see that we are using a lot of repetitive code so we will extract the input and make another common component:
+
+../common/Input.jsx
+```
+import React from "react";
+
+const Input = ({ name, label, value, onChange }) => {
+  return (
+    <div className="form-group">
+      <label htmlFor={name}>{label}</label>
+      <input
+        value={value} 
+        onChange={onChange} 
+        id={name}
+        name={name}
+        type="text"
+        className="form-control"
+      />
+    </div>
+  );
+};
+
+export default Input;
+```
+
+Then we will use it in loginForm to make the code more compact:
+
+loginForm.jsx
+```
+...
+import Input from "../common/input";
+...
+      <div>
+        <h1>Login</h1>
+        <form onSubmit={this.handleSubmit}>
+          <Input
+            name="username"
+            value={account.username}
+            label="Username"
+            onChange={this.handleChange}
+          />
+          <Input
+            name="password"
+            value={account.password}
+            label="Password"
+            onChange={this.handleChange}
+          />
+          <button className="btn btn-primary">Login</button>
+        </form>
+      </div>
+```
+
