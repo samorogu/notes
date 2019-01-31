@@ -2311,3 +2311,33 @@ import Input from "../common/input";
       </div>
 ```
 
+##### Form-Validation
+
+Initially we will validate the login. in the state we will include an object of errors instead of a list because it is easier to access the objects. For example, if we use an array, to access those errors we would have to type something like `errors.find(e=>e.name === username)`
+
+.components/loginForm.jsx
+```
+...
+state = {
+    account: { username: "", password: "" },
+    errors: {}
+  };
+
+   validate = () => {
+    return { username: "Username is requiered." };
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const errors = this.validate();
+    this.setState({ errors });
+
+    if (errors) return;
+//call the server
+    console.log("submited");
+  };
+
+```
+
+If there are any errors, we return the function, and doesn't call the server
