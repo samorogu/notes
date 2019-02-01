@@ -2369,3 +2369,75 @@ components/loginForm.jsx
 ```
 
 If there the user doesn't put text and click submit, we will log in the console, the object with the errors: `Username is required` or/and `Password is required`
+
+##### Form-Display validation errors
+
+The validation error will be handle by the input component, so first we will include a danger div in it`div.alert.alert-danger`:
+
+common/login.jsx
+```
+...
+{ name, label, value, error, onChange })//object destructuring in the parameter
+...
+
+    <div className="form-group">
+      <label htmlFor={name}>{label}</label>
+      <input
+        value={value} //props to set its value
+        onChange={onChange} //update the state when the user types
+        // autoFocus
+        // ref={this.username}
+        id={name}
+        name={name}
+        type="text"
+        className="form-control"
+      />
+      {error && <div className="alert alert-danger">{error}</div>}
+    </div>
+
+```
+
+If an error is different than null, it will be true c and continue with the other validation and return the alert.
+
+Then we will pass the parameters in loginForm:
+
+components/loginForm.jsx
+```
+...
+const { account, errors } = this.state;
+    return (
+      <div>
+        <h1>Login</h1>
+        <form onSubmit={this.handleSubmit}>
+          <Input
+            name="username"
+            value={account.username}
+            label="Username"
+            onChange={this.handleChange}
+            error={errors.username}
+          />
+          <Input
+            name="password"
+            value={account.password}
+            label="Password"
+            onChange={this.handleChange}
+            error={errors.password}
+          />
+          <button className="btn btn-primary">Login</button>
+        </form>
+      </div>
+    );
+
+```
+
+Now if we go to the browser and try to submit the form, it will show the error message for both, the password and username input. If we type an string to the username and submit, it will show only the password error. But if we type both characters, it will have a runtime error because errors are null and we are trying access the username property of a null object. To fix this problem we will use true c but with the or operator in the set.State:
+
+loginForm.jsx
+```
+...
+   this.setState({ errors: errors || {} });
+```
+
+If there are errors, it will show them. And if not, it will return a empty object. Null cannot be return and try to access to their properties.
+
+
