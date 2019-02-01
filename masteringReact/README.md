@@ -2341,3 +2341,31 @@ state = {
 ```
 
 If there are any errors, we return the function, and doesn't call the server
+
+##### Form-Basic Validation Implementation
+
+Next we will validate for the 2 text inputs: username,password:
+
+components/loginForm.jsx
+```
+...
+  validate = () => {
+    const errors = {};
+
+    const { account } = this.state;
+
+    if (account.username.trim() === "")
+      errors.username = "Username is requiered.";
+    if (account.password.trim() === "")
+      errors.password = "Password is requiered.";
+
+    return Object.keys(errors).length === 0 ? null : errors;
+  };
+  ...
+    const errors = this.validate();
+    console.log(errors);
+    this.setState({ errors });
+
+```
+
+If there the user doesn't put text and click submit, we will log in the console, the object with the errors: `Username is required` or/and `Password is required`
