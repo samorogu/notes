@@ -2442,3 +2442,42 @@ If there are errors, it will show them. And if not, it will return a empty objec
 
 
 ##### Form-Validation on change
+
+When validate an input inside a form, we call it inside the handleChange, but not calling the validate method because it will validate all the form, so we will validate only that input:
+
+common/loginForm.jsx
+```{}
+...
+  handleChange = ({ currentTarget: input }) => {
+    const errors ={...this.state.errors};
+    const errorMessage = this.validateProperty(input);
+    if(errorMessage) errors[input.name]=errorMessage;//if the error message is true c, it  will put that error, if not, it will delete it.
+    else delete errors[input.name];
+
+    const account = { ...this.state.account };
+    account[input.name] = input.value;
+    this.setState({ account,errors });
+  };
+
+```
+
+Next we will implement the funciton `validatProperty()` up to the `handle Change` method.This will be a simple validation, later we will implement a better and sophistic implementation.
+
+loginForm/loginForm.jsx
+```
+...
+ validateProperty = ({ name, value }) => {
+    if (name === "username") {
+      if (value.trim() === "") return "Username is required";
+      //...
+    }
+    if (name === "password") {
+      if (value.trim() === "") return "Password is required";
+      //...
+    }
+  };
+
+```
+
+If we test the aplication, we will see that if we type something in the username input, nothing will happen but if we delte that, an eror will pop up.
+
