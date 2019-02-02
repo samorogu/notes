@@ -1695,7 +1695,7 @@ productDetails.jsx
 
 ##### Routing Nested Routing
 
-Now we will have different level of routing and for that we will go to the dashboard.sjx inside the admin directory and add 2 links `  ul>(li>Link[to=''])*2 + tab':
+Now we will have different level of routing and for that we will go to the dashboard.sjx inside the admin directory and add 2 links `  ul>(li>Link[to=''])*2 + tab'`:
 
 ```
 ...
@@ -2035,7 +2035,7 @@ Now we will register another route in app.js:
 import LoginForm from "./component/loginForm";
 ...
 <Route path="/login" component={LoginForm} />
-``
+```
 
 Next we need to include a link to the navbar:
 
@@ -2441,3 +2441,4 @@ loginForm.jsx
 If there are errors, it will show them. And if not, it will return a empty object. Null cannot be return and try to access to their properties.
 
 
+##### Form-Validation on change
