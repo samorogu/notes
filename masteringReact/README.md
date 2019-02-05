@@ -2481,3 +2481,25 @@ loginForm/loginForm.jsx
 
 If we test the aplication, we will see that if we type something in the username input, nothing will happen but if we delte that, an eror will pop up.
 
+##### Form-Joi
+
+To implement validation forms and not use our primitive validation we will use a package named Joi. we will define schema, all their properties and validations `npm i joi-browser@13.4` . This give us a easily schema to map our errors:
+
+loginForm.jsx
+
+```
+import Joi from "joi-browser";
+...
+   schema = {
+      username: Joi.string().required(),
+      password: Joi.string().required()
+    };
+
+    validate = () => {
+    const result = Joi.validate(this.state.account, this.schema, {
+      abortEarly: false//to put the 2 errors and not abort early
+    });
+    console.log(result);
+```
+
+If we go to the console  we cand we that this returns an object with errors that can be mapped to our message in the next section.
