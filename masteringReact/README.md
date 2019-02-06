@@ -2503,3 +2503,24 @@ import Joi from "joi-browser";
 ```
 
 If we go to the console  we cand we that this returns an object with errors that can be mapped to our message in the next section.
+
+##### Form-Validating a form using joi
+
+First of all we will delete our simple validation that we did earlier and we will substitute the function validate with the message given by `joi`. First we will create a variable to substitute the third  parameter inside the Joi validate function and iterate over all the items inside the error details array and put it inside and object to return it to the user.
+
+loginForm.jsx
+```
+...
+validate = () => {
+    const options = { abortEarly: false };
+    const { error } = Joi.validate(this.state.account, this.schema, options);
+   
+     if (!error) return null;
+
+    const errors = {};
+
+    for (let item of error.details) errors[item.path[0]] = item.message;
+    return errors;
+   }
+
+```
