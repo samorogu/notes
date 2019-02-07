@@ -2524,3 +2524,23 @@ validate = () => {
    }
 
 ```
+
+##### Form-Validating a field using joi
+
+
+Just how we defined the validate for all the form inside the submit, we will define the validateProperty in each required input. We first commit the code we did manually and start defining first an constant object that will compute a property dinamically(only in esx6). Then we will define the schema but only the property that we want, destructure each error within Joi and return it if there are any errors:
+
+components/loginForm.jsx
+```
+...
+
+ validateProperty = ({ name, value }) => {
+
+    const obj = { [name]: value }; //computer property jsx6
+    const schema = { [name]: this.schema[name] };
+    const { error } = Joi.validate(obj, schema);
+    return error ? error.details[0].message : null;
+  };
+
+```
+
