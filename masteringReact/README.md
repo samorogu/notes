@@ -2559,7 +2559,75 @@ components/loginForm.jsx
 
 If `validate` returns false, it will not be disable and if it is true c, it will be true the disabled button.
 
-##### Code Review
+##### Exrtacting a reusable form
+
+We will create a reusable component in the common directory:
+
+common/form.jsx
+```
+import React, { Component } from "react";
+import Joi from "joi-browser";
+
+class Form extends Component {
+  state = {
+    data: {},
+    errors: {}
+  };
+
+  validate = () => {
+    const options = { abortEarly: false };
+    const { error } = Joi.validate(this.state.data, this.schema, options);
+    if (!error) return null;
+
+    const errors = {};
+    for (let item of error.details) errors[item.path[0]] = item.message;
+    return errors;
+  };
+
+  validateProperty = ({ name, value }) => {
+    const obj = { [name]: value }; //computer property jsx6
+    const schema = { [name]: this.schema[name] };
+    const { error } = Joi.validate(obj, schema);
+    return error ? error.details[0].message : null;
+  };
+
+  handleSubmit = e => {
+    e.preventDefault(); //let's stop this event
+
+    const errors = this.validate();
+    this.setState({ errors: errors || {} });
+
+    if (errors) return;
+
+    this.doSubmit();
+  };
+
+  handleChange = ({ currentTarget: input }) => {
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(input);
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+
+    const data = { ...this.state.data };
+    data[input.name] = input.value;
+    this.setState({ data, errors });
+  };
+}
+
+export default Form;
+
+```
+And then only extends the component the we made, deleting all the just that we have on login form that should only be in login Form:
+
+```
+...
+import React, { Component } from "react";
+...
+class LoginForm extends Form 
+
+```
+
+Now we will test if everything is ok
 
 
 
