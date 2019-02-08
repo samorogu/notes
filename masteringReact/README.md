@@ -2528,7 +2528,7 @@ validate = () => {
 ##### Form-Validating a field using joi
 
 
-Just how we defined the validate for all the form inside the submit, we will define the validateProperty in each required input. We first commit the code we did manually and start defining first an constant object that will compute a property dinamically(only in esx6). Then we will define the schema but only the property that we want, destructure each error within Joi and return it if there are any errors:
+Just how we defined the validate for all the form inside the submit, we will define the validateProperty in each required input. We first commit the code we did manually and start defining first an constant object that will compute a property dynamically(only in ES6). Then we will define the schema but only the property that we want, destructuring each error within Joi and return it if there are any errors:
 
 components/loginForm.jsx
 ```
@@ -2543,4 +2543,23 @@ components/loginForm.jsx
   };
 
 ```
+
+##### Form-Disabling the submit button
+
+With a simple implementation, we can disable the submit button:
+
+components/loginForm.jsx
+
+```
+...
+          <button disabled={this.validate()} className="btn btn-primary">
+            Login
+          </button>
+```
+
+If `validate` returns false, it will not be disable and if it is true c, it will be true the disabled button.
+
+##### Code Review
+
+
 
