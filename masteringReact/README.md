@@ -2629,5 +2629,57 @@ class LoginForm extends Form
 
 Now we will test if everything is ok
 
+##### Exrtacting helper rendering methods
 
+First we will extract the render and create a method to extract the button:
 
+common/form.jsx
+```
+...
+ renderButton(label) {
+    return (
+      <button disabled={this.validate()} className="btn btn-primary">
+        {label}
+      </button>
+    );
+  }
+```
+and in LoginForm we will render the button:
+
+```
+...
+{this.renderButton("Login")}
+
+``` 
+
+Then we will make the same for, what it is like to be redundant part of the code that can be extracted in a method for the form component:
+
+form.jsx
+```
+...
+import Input from "../common/input";
+...
+  renderInput(name, label) {
+    const { data, errors } = this.state;
+    return (
+      <Input
+        name={name}
+        value={data[name]}
+        label={label}
+        onChange={this.handleChange}
+        error={errors[name]}
+      />
+    );
+  }
+```
+
+And call it in the login form:
+
+components/loginForm.jsx
+```
+...
+          {this.renderInput("username", "Username")}
+          {this.renderInput("password", "Password")}
+          {this.renderButton("Login")}
+
+```
