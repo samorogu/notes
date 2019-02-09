@@ -2644,13 +2644,6 @@ common/form.jsx
     );
   }
 ```
-and in LoginForm we will render the button:
-
-```
-...
-{this.renderButton("Login")}
-
-``` 
 
 Then we will make the same for, what it is like to be redundant part of the code that can be extracted in a method for the form component:
 
@@ -2673,7 +2666,7 @@ import Input from "../common/input";
   }
 ```
 
-And call it in the login form:
+And call it those methods in the login form:
 
 components/loginForm.jsx
 ```
@@ -2681,5 +2674,84 @@ components/loginForm.jsx
           {this.renderInput("username", "Username")}
           {this.renderInput("password", "Password")}
           {this.renderButton("Login")}
+
+```
+
+Finally to end this chapter we will use the spread operator and the rest attribute that to get all the attributes different than name, label and error:
+
+common/input.jsx
+
+```
+...
+    <div className="form-group">
+      <label htmlFor={name}>{label}</label>
+      <input {...rest} name={name} id={name} className="form-control" />
+      {error && <div className="alert alert-danger">{error}</div>}
+    </div>
+
+```
+
+##### Register Form
+
+For this exercise we will make another form: registerForm, it will extends also the Form component and will have another property in the state: `name`, the schema will be almost the same. username will have another property: email and password will have another validation: `min(5)`
+
+```
+...
+import React from "react";
+import Joi from "joi-browser";
+import Form from "../common/form";
+
+class RegisterForm extends Form {
+  state = {
+    data: { username: "", password: "", name: "" },
+    errors: {}
+  };
+
+  schema = {
+    username: Joi.string()
+      .email()
+      .required()
+      .label("Username"),
+    password: Joi.string()
+      .min(5)
+      .required()
+      .label("Password"),
+    name: Joi.string()
+      .required()
+      .label("Name")
+  };
+
+  doSubmit = () => {
+    //call the server
+    console.log("submitted");
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>Register</h1>
+        <form onSubmit={this.handleSubmit}>
+          {this.renderInput("username", "Username")}
+          {this.renderInput("password", "Password", "password")}
+          {this.renderInput("name", "Name")}
+          {this.renderButton("Register")}
+        </form>
+      </div>
+    );
+  }
+}
+
+export default RegisterForm;
+```
+
+and finally import it in the App.js
+
+App.js
+
+```
+...
+import RegisterForm from "./components/registerForm";
+...
+            <Route path="/register" component={RegisterForm} />
 
 ```
