@@ -2788,7 +2788,7 @@ App.js
 
 ```
 
-And modify what we have in movieForm:
+And modify what we have in movieForm. First we call the methods getGenre, getMovie and saveMovie with the usuall components called when creating a form.
 
 movieForm
 ```
@@ -2796,45 +2796,87 @@ import React from "react";
 import Joi from "joi-browser";
 import Form from "../common/form";
 import { getGenres } from "../services/fakeGenreService";
+import { getMovie, saveMovie } from "../services/fakeMovieService";
 
+```
+
+Then we define the state, that includes genres, the data to display and the errors:
+
+movieForm
+```
 class MovieForm extends Form {
   state = {
     genres: [], //For the purpous of this exercise will get the genres in component did mount
-    data: { title: "", genre: "", stock: "", rate: "" },
+    data: { title: "", genreId: "", numberInStock: "", dailyRentalRate: "" },
     errors: {}
   };
 
-  componentDidMount() {
-    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
-  }
+```
 
-  schema = {
+Then we define the schema that validates the movie parameters:
+
+```
+ schema = {
+    _id: Joi.string(),
     title: Joi.string()
       .required()
       .label("Title"),
-    genre: Joi.string()
+    genreId: Joi.string()
       .required()
       .label("Genre"),
-    stock: Joi.number()
-      .min(1)
+    numberInStock: Joi.number()
+      .min(0)
       .max(100)
       .required()
       .label("Number in Stock"),
-    rate: Joi.number()
+    dailyRentalRate: Joi.number()
       .min(1)
       .max(10)
       .required()
-      .label("Rate")
+      .label("Daily Rental Rate")
   };
 
-  handleGenreSelect = genre => {
-    //console.log(genre);
-    this.setState({ selectedGenre: genre });
-  };
+```
 
-  doSubmit = () => {
-    //call the server
-    console.log("submitted");
+Subsequently we define the component did mount to populate the state if we access from a movie or we access from the new movie, having special care with the not found parameter. We use replace and not push to not have an infinite loop if we have a movie that isn't in the database. Finally if we access within a movie, we define the mapToViewModel that displays the movie details:
+
+
+movieForm.jsx
+```
+componentDidMount() {
+    const genres = getGenres();
+    this.setState({ genres });
+
+    const movieId = this.props.match.params.id; //we get the id of the movie selected
+    if (movieId === "new") return; //we return an empty form to fill
+
+    const movie = getMovie(movieId);
+    if (!movie) return this.props.history.replace("/not-found"); //if  we put push it will return the last page with an invalide id
+    //we use a method because the object is slighly different
+    this.setState({ data: this.mapToViewModel(movie) }); //we show the current movie details
+  }
+
+  mapToViewModel(movie) {
+    return {
+      _id: movie._id,
+      title: movie.title,
+      genreId: movie.genre._id, // the movies are high arc
+      numberInStock: movie.numberInStock,
+      dailyRentalRate: movie.dailyRentalRate
+    };
+  }
+
+```
+
+Posterior from this we define the handleGenreSelect that takes a parameter to change the state. If everything is correct we create the function doSubmit that saves the movie and returns the link to movies. And last but not least, we return the render of the form, we render the inputs, the button and a new class Select that is similar to the renderInput. It important to specify that we could make the display comboBox within the Input but there are others bootstrap inputs that are a lot different from this two and is better to have a different Component.
+
+movieForm.jsx
+
+```
+doSubmit = () => {
+    saveMovie(this.state.data);
+
+    this.props.history.push("/movies"); //finally we redirect the user to movies
   };
 
   render() {
@@ -2843,30 +2885,81 @@ class MovieForm extends Form {
         <h1>Movie Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("title", "Title")}
-          {this.renderInput("genre", "Genre")}
-          {this.renderInput("stock", "Number in Stock")}
-          {this.renderInput("rate", "Rate")}
+          {this.renderSelect("genreId", "Genre", this.state.genres)}
+          {this.renderInput("numberInStock", "Number in Stock", "number")}
+          {this.renderInput("dailyRentalRate", "Rate")}
           {this.renderButton("Save")}
         </form>
       </div>
     );
   }
 }
+```
 
-// export default MovieForm;
+Next we review the select component that takes the the genres:
 
-//  MovieForm = ({ match, history }) => {
-//   return (
-//     <div>
-//       <h1>Movie Form {match.params.id} </h1>
-//       <button className="bt bt-primary" onClick={() => history.push("/movies")}>
-//         Save
-//       </button>
-//     </div>
-//   );
-// };
+common/select.jsx 
+```
+import React from "react";
 
-export default MovieForm;
+const Select = ({ name, label, options, error, ...rest }) => {
+  return (
+    <div className="form-group">
+      <label htmlFor={name}>{label}</label>
+      <select name={name} id={name} {...rest} className="form-control">
+        <option value="" />
+        {options.map(option => (
+          <option key={option._id} value={option._id}>
+            {option.name}
+          </option>
+        ))}
+      </select>
+      {error && <div className="alert alert-danger">{error}</div>}
+    </div>
+  );
+};
+
+export default Select;
 
 ```
 
+Next we define the renderSelect in the form component:
+
+common/form.jsx
+```
+
+  renderSelect(name, label, options) {
+    const { data, errors } = this.state;
+    return (
+      <Select
+        name={name}
+        value={data[name]}
+        label={label}
+        options={options}
+        onChange={this.handleChange}
+        error={errors[name]}
+      />
+    );
+  }
+
+```
+And finally we correct the saveMovie method that has 2 bugs: first, instead of name it title and when defining the id, to edit the _id we have to define the method toString
+
+service/fakeMovieService.js
+```
+export function saveMovie(movie) {
+  let movieInDb = movies.find(m => m._id === movie._id) || {};
+  movieInDb.title = movie.title; //is not name, is title
+  movieInDb.genre = genresAPI.genres.find(g => g._id === movie.genreId);
+  movieInDb.numberInStock = movie.numberInStock;
+  movieInDb.dailyRentalRate = movie.dailyRentalRate;
+
+  if (!movieInDb._id) {
+    movieInDb._id = Date.now().toString(); //with this we can edit the movies
+    movies.push(movieInDb);
+  }
+
+  return movieInDb;
+}
+
+```
