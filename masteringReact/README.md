@@ -2961,5 +2961,88 @@ export function saveMovie(movie) {
 
   return movieInDb;
 }
+```
 
+##### Search Movies exercies
+
+For this exercise we will implement a search bar. It will reset the genre filter and if the user clicks the genre filter, it will reset the search bar.
+When dealing with controlled components we cannot use null.
+
+First we will create the searchBox component that takes a value to filter and raises an event when it changes:
+
+common/searchBox.jsx
+
+```
+import React from "react";
+
+const SearchBox = ({ value, onChange }) => {
+  return (
+    <input
+      type="text"
+      name="query"
+      className="form-control my-3" //margin y
+      placeholder="Search..."
+      value={value}
+      onChange={e => onChange(e.currentTarget.value)} //we raise an event with the value
+    />
+  );
+};
+
+export default SearchBox;
+
+
+```
+
+Then we import that component in movies. First we create the state the searchQuery parameter that is a string because it is a controlled component. Also we add the selectedGenre that is easier to see that is initialize with null. Next we change the parameters within the `handleGenreSelect` method and create the `handleSearch` method.Posterior to that we modify the getPageData to accept the genre filtered or the searchBox filtered. Finally we call the searchBox component with the value to search and with the method raised.
+
+```
+import SearchBox from "../common/searchBox";
+...
+ state = {
+    movies: [], //until I use lifehooks, this will be the way I will set the state
+    genres: [], //For the purpous of this exercise will get the genres in component did mount
+    currentPage: 1, //current page in the pagination
+    pageSize: 4, //number of pages displayed
+    searchQuery: "",
+    selectedGenre: null, //for make it easier to understand what is happening
+    sortColumn: { path: "title", order: "asc" } //column sorted
+  };
+...
+ handleGenreSelect = genre => {
+    //console.log(genre);
+    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
+  };
+
+  handleSearch = query => {
+    this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
+  };
+...
+getPagedData = () => {
+    const {
+      pageSize,
+      currentPage,
+      sortColumn,
+      selectedGenre,
+      searchQuery,
+      movies: allMovies
+    } = this.state;
+
+  
+
+    let filtered = allMovies;
+    if (searchQuery)
+      filtered = allMovies.filter(m =>
+        m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    else if (selectedGenre && selectedGenre._id)
+      filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
+
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const movies = paginate(sorted, currentPage, pageSize); //if count is not 0 we will create an array of movies
+
+    return { totalCount: filtered.length, data: movies };
+  };
+  ...
+  <SearchBox value={searchQuery} onChange={this.handleSearch} />
 ```
