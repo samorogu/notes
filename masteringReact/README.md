@@ -3046,3 +3046,19 @@ getPagedData = () => {
   ...
   <SearchBox value={searchQuery} onChange={this.handleSearch} />
 ```
+
+#### Calling backend services
+
+
+For this we will start from the directory `http-app` and click `npm i` and if we run the app `npm start` we  will see a simple application with a button to add a post and a list of post to edit.
+
+##### JSON Placeholder
+
+For now we will make a fake rest api with [jsonplaceholder](https://jsonplaceholder.typicode.com).We will access the endpoint [post](https://jsonplaceholder.typicode.com/posts). With this we will make CRUD operations(create,read,update and delete).
+
+##### Http Clients
+
+for this section we will use axios for handle http request. There are other options like native fetch api and ajax. Let install it: `npm i axios`
+
+
+

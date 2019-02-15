@@ -50,3 +50,6 @@ yarn-error.log*
 
 #gitignore of routing
 /masteringReact/06_routing/router-app/node_modules
+
+#gitignore of backend service
+/masteringReact/08_backendServices/http-app/node_modules
