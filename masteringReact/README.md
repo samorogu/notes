@@ -3108,6 +3108,37 @@ const apiEndpoint = "https://jsonplaceholder.typicode.com/posts";
 
 ```
 
+##### Lifecycle of a request
 
+When we click new, we can go to the network tab to see there are are 2 posts objects, one has the options request method and the other one has the post string. options is render when the host and the api are in 2 different domains for security reasons. For the second request method `POST`  has a status of 201 `object was created` and if we scroll down, we can see there is a request payload that has the body properties and title. If we go to response we can see our data and a fake id. Axios wrap that object in a response object that has properties like the data and the header.
 
+##### Updating data
 
+When updating an object we can select 2 methods within axios: put and patch. Put receives an entire object and patch can modify specific properties inside an object:
+
+example
+```
+
+handleUpdate = post => {
+    post.title = "UPDATED";
+    axios.put(apiEndpoint + '/' + post.id, post);
+    axios.patch(apiEndpoint + '/' + post.id, {title:post, title });
+  };
+```
+
+For now we only need put and with a fixed title we will change the post and update the state:
+
+App.js
+```
+...
+ handleUpdate = async post => {
+    post.title = "UPDATED";
+    await axios.put(apiEndpoint + "/" + post.id, post);
+
+    const posts = [...this.state.posts];
+    const index = posts.indexOf(post);
+    posts[index] = { ...post };
+    this.setState({ posts });
+  };
+
+```
