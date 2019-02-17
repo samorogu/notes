@@ -3083,5 +3083,31 @@ import axios from "axios";
   }
 ``` 
 
+##### Creating Data
+
+Now we will handle the post method to create fictional data. First we will create a global variable to handle the api and call it multiple times. Then we will modify our handleAdd method to fixedly add an object.
+
+App.js
+
+```
+...
+const apiEndpoint = "https://jsonplaceholder.typicode.com/posts";
+...
+ async componentDidMount() {
+    //pending > resolved (success) or rejected (failure)
+    const { data: posts } = await axios.get(apiEndpoint);
+    this.setState({ posts });
+  }
+
+  handleAdd = async () => {
+    const obj = { title: "a", body: "b" };
+    const { data: post } = await axios.post(apiEndpoint, obj);
+    const posts = [post, ...this.state.posts];
+    this.setState({ posts });
+  };
+
+```
+
+
 
 
