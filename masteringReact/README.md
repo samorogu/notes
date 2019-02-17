@@ -3142,3 +3142,17 @@ App.js
   };
 
 ```
+
+##### Delete data
+
+Now we will delete the data with the delete method. It doesn't need the body of the post:
+
+App.js
+```
+ handleDelete = async post => {
+    await axios.delete(apiEndpoint + "/" + post.id);
+    const posts = this.state.posts.filter(p => p.id !== post.id);
+    this.setState({ posts });
+  };
+
+```
