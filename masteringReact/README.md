@@ -3156,3 +3156,29 @@ App.js
   };
 
 ```
+
+##### Optimistic vs Pessimistic updates 
+
+When updating the api,something might be wrong so we need to change what we were trying. Also we can update the state of react and if the call to the server fails we can get the original state and substitute it if something fails. With this we give the user a sensation of a fast application.
+
+App.js
+```
+
+handleDelete = async post => {
+    const originalPosts = this.state.posts;
+
+    const posts = this.state.posts.filter(p => p.id !== post.id);
+    this.setState({ posts });
+    try {
+      await axios.delete(apiEndpoint + "/" + post.id);
+      throw new Error("");
+    } catch (ex) {
+      alert("Something failed while delting a post !");
+      this.setState({ posts: originalPosts });
+    }
+  };
+
+
+```
+
+
