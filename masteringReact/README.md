@@ -3060,7 +3060,28 @@ For now we will make a fake rest api with [jsonplaceholder](https://jsonplacehol
 
 for this section we will use axios for handle http request. There are other options like native fetch api and ajax. Let install it: `npm i axios@0.18`
 
-After installing axios we will continue with the backend
+
+##### Getting Data
+After installing axios we will continue with the backend. We will get the list of post from the backend. First we will import axios and with the snippet `cdm` we will invoke the `componentDidMount()` method.
+With this we will call the end point mentioned before in Json placeholder. This will be store in a promise, an asynchronous call that will be completed in the future because of a delay.
+
+If we reload the page, and we do a console.log on the promise, it will have 2 poslbe states: success or failure. When loading it will have the state of pending. It has 2 properties, promisestatus and promiseValue  that has the respond of the post.
+
+For a  function to receive a promise, it has to have the async word and the const that has the promise has to have await. With object desctructuring, we can get data, rename it posts and store it in the posts object in the state:
+
+App.js
+```
+...
+import axios from "axios";
+...
+  async componentDidMount() {
+    //pending > resolved (success) or rejected (failure)
+    const { data: posts } = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts"
+    );
+    this.setState({ posts });
+  }
+``` 
 
 
 
