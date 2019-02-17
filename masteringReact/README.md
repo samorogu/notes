@@ -3058,7 +3058,9 @@ For now we will make a fake rest api with [jsonplaceholder](https://jsonplacehol
 
 ##### Http Clients
 
-for this section we will use axios for handle http request. There are other options like native fetch api and ajax. Let install it: `npm i axios`
+for this section we will use axios for handle http request. There are other options like native fetch api and ajax. Let install it: `npm i axios@0.18`
+
+After installing axios we will continue with the backend
 
 
 
