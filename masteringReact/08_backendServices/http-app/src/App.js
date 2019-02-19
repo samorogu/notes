@@ -41,7 +41,16 @@ class App extends Component {
       await axios.delete(apiEndpoint + "/" + post.id);
       throw new Error("");
     } catch (ex) {
-      alert("Something failed while delting a post !");
+      //ex.request
+      //ex.response
+
+      if (ex.response && ex.response.status === 404)
+        alert("This post  has already been deleted.");
+      else {
+        console.log("Loggin the error", ex);
+        alert("An unexpected error ocurred..");
+      }
+
       this.setState({ posts: originalPosts });
     }
   };

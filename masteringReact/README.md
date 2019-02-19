@@ -3181,4 +3181,31 @@ handleDelete = async post => {
 
 ```
 
+##### Expected vs Unexpected errors
 
+Expected errors are the ones the client is responsible, like 404 or 400: submit with a invalidate data. but if an error is unexpected:network down, server down, db down, bug. We need to treat it different. If a user has multiple tabs and in one a post exist, it should be printed the error as the post has already been deleted and we don't need to log it.
+
+App.js
+
+```
+...
+
+atch (ex) {
+
+      //ex.request
+      //ex.response
+ 
+
+      if (ex.response && ex.response.status === 404)
+        alert('This post  has already been deleted.');
+      else {
+        console.log('Loggin the error', ex);
+        alert("An unexpected error ocurred..");
+      }
+   
+      this.setState({ posts: originalPosts });
+    }
+
+```
+
+To simulate a client error:`await axios.delete(apiEndpoint + "/999" + post.id);`.And to simulate an unexpected error `await axios.delete('s'+apiEndpoint + "/" + post.id);`
