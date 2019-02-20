@@ -3190,7 +3190,7 @@ App.js
 ```
 ...
 
-atch (ex) {
+catch (ex) {
 
       //ex.request
       //ex.response
@@ -3209,3 +3209,71 @@ atch (ex) {
 ```
 
 To simulate a client error:`await axios.delete(apiEndpoint + "/999" + post.id);`.And to simulate an unexpected error `await axios.delete('s'+apiEndpoint + "/" + post.id);`
+
+
+##### Handling Unexpected errors globally
+
+We need the handle error in all our handlers. We need an intercepter in axios. We can handle that  error in one place We first create an example in the global:
+
+App.js
+```
+...
+axios.interceptors.response.use(null, error => {
+  console.log("Interceptor called");
+
+  return Promise.reject(error);
+});
+...
+
+  try {
+      await axios.delete(apiEndpoint + "/999" + post.id);
+      throw new Error("");
+    } catch (ex) {
+catch (ex) {
+      //ex.request
+      //ex.response
+
+      console.log("Handle delete catch block");
+
+```
+
+If we try to  delete an observation that isn't in the db, we catch an error first with the interceptor and then it is log the handle delete block.
+Now we can entirely give the manipulation of the error to the interceptor. If an unexpected error occurs, it will show the message:
+
+App.js
+```
+...
+axios.interceptors.response.use(null, error => {
+  const expectedError =
+    error.response && error.response.status >= 400 && error.response < 500;
+  if (!expectedError) {
+    console.log("Loggin the error", error);
+    alert("An unexpected error ocurred.");
+  }
+  return Promise.reject(error);
+});
+...
+    try {
+      await axios.delete(apiEndpoint + "/hola/s" + post.id);
+      throw new Error("");
+    } catch (ex) {
+      //ex.request
+      //ex.response
+
+      if (ex.response && ex.response.status === 404)
+        alert("This post  has already been deleted.");
+
+      this.setState({ posts: originalPosts });
+    }
+
+```
+
+With this we can view the alert popped by the catch response status 404. And if we put an unexpected error:
+
+```
+await axios.delete("a" + apiEndpoint + post.id);
+
+```
+
+axios will render the unexpected error catched by the interceptor and print the log
+
