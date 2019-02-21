@@ -3277,3 +3277,50 @@ await axios.delete("a" + apiEndpoint + post.id);
 
 axios will render the unexpected error catched by the interceptor and print the log
 
+##### Extracting a reusable Http service
+
+
+Now we will hide the axios http because the App.js only should have to deal  with routing. So we will create an httpService with the axios interceptors:
+
+services/httpService.js
+```
+import axios from "axios";
+
+//axios.interceptors.response.use(success,error)//for  now we only want intercept errors
+axios.interceptors.response.use(null, error => {
+  const expectedError =
+    error.response &&
+    error.response.status >= 400 &&
+    error.response.status < 500;
+  if (!expectedError) {
+    console.log("Loggin the error", error);
+    alert("An unexpected error ocurred.");
+  }
+  return Promise.reject(error);
+});
+
+export default {
+  get: axios.get,
+  post: axios.post,
+  put: axios.put,
+  delete: axios.delete
+};
+
+```
+
+Now we mask the axios properties into the export default and change the axios word places with http:
+
+App.js
+```
+...
+import http from "./services/httpService";
+...
+const { data: posts } = await http.get(apiEndpoint);
+...
+const { data: post } = await http.post(apiEndpoint, obj);
+...
+await http.put(apiEndpoint + "/" + post.id, post);
+...
+await http.delete("a" + apiEndpoint + post.id);
+
+```
