@@ -3324,3 +3324,34 @@ await http.put(apiEndpoint + "/" + post.id, post);
 await http.delete("a" + apiEndpoint + post.id);
 
 ```
+
+##### Extracting a Config Module
+
+We need to have a config file to spare the ugliness of hardcoding the apiEndpoint. So we will create a config file:
+
+src/config.js
+```
+{
+  "apiEndpoint": "https://jsonplaceholder.typicode.com/posts"
+}
+
+
+```
+
+Now we delete the const apiEndpoint from App.js and include the config file substituting the apiEndpoint constants (cmd+d):
+
+App.js
+
+```
+...
+import config from './config.json';
+...
+const { data: posts } = await http.get(config.apiEndpoint);
+...
+const { data: post } = await http.post(config.apiEndpoint, obj);
+...
+await http.put(config.apiEndpoint + "/" + post.id, post);
+...
+await http.delete("a" + config.apiEndpoint + post.id);
+```
+
