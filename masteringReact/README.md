@@ -3355,3 +3355,31 @@ await http.put(config.apiEndpoint + "/" + post.id, post);
 await http.delete("a" + config.apiEndpoint + post.id);
 ```
 
+##### Displaying Toast Notifications
+
+First we will install: `npm i react-toastify@4.1`. This will display beautiful error, success,info message instead of the simple alert. First in the app we will import it and make the alert:
+
+App.js
+```
+...
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+...
+ <ToastContainer />
+```  
+
+Then we will manage the catch error and display the message:
+
+httpService.js
+```
+import { toast } from "react-toastify";
+...
+  if (!expectedError) {
+    console.log("Loggin the error", error);
+    toast.error("An unexpected error ocurred.");
+    //toast.success toast.info or only toast
+  }
+
+```
+
+toast is a function that can also be called an a different style will be display if we call it as: toas, toasti.info, toast.success.
