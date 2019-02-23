@@ -3383,3 +3383,37 @@ import { toast } from "react-toastify";
 ```
 
 toast is a function that can also be called an a different style will be display if we call it as: toas, toasti.info, toast.success.
+
+##### Logging Errors
+
+We will install sentry logging service `npm i raven-js@3.26.4`. As the time I'm writing this, raven isn't capturing the events on sentry. This is because sentry unify versions and raven isn't capturing unexpected errors. It only capture a crashing error. 
+
+Never the less, As mentioned in the video we first need to install the configuration of Raven:
+
+index.js
+```
+import Raven from "raven.js";
+...
+Raven.config("https://a4e156684c9c45e7b18707b95edccccd@sentry.io/1400997", {
+  release: "1-0-0",
+  enviroment: "development-test"
+}).install();
+
+``` 
+The capture the error:
+
+httpService.js
+```
+...
+import Raven from "raven-js";
+...
+ if (!expectedError) {
+    //console.log("Loggin the error", error);
+    Raven.captureException(error);
+    toast.error("An unexpected error ocurred.");
+
+  }
+
+```
+
+And then go to the project on sentry and theoretically view the error in the project defined by me.
