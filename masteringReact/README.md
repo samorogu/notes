@@ -3417,3 +3417,60 @@ import Raven from "raven-js";
 ```
 
 And then go to the project on sentry and theoretically view the error in the project defined by me.
+
+To handle this error I will install `npm i @sentry/browser` that seems to be the unified version of sentry for handling errors. I still doesn't have the response from sentry.
+
+
+##### Extracting a Logger Service
+
+We will extract all the logic of the logger service because it might change ,as how it happen, or we would prefered to change the library. So we will create this:
+
+/services/logService.js
+
+```
+import * as Sentry from "@sentry/browser";
+//import Raven from "raven-js";
+function init() {
+  // Raven.config("https://a4e156684c9c45e7b18707b95edccccd@sentry.io/1400997", {
+  //   release: "1-0-0",
+  //   enviroment: "development-test"
+  // }).install();
+
+  Sentry.init({
+    dsn: "https://a4e156684c9c45e7b18707b95edccccd@sentry.io/1400997",
+    release: "1-0-0",
+    enviroment: "development-test"
+  });
+}
+
+function log(error) {
+  // Raven.captureException(error);
+  Sentry.captureException(error);
+}
+
+export default {
+  init,
+  log
+};
+
+```
+
+and change the reference from index.js and httpService.js
+
+index.js
+```
+import logger from "/services/logService";
+...
+logger.init();
+
+```
+
+httpService.js
+```
+import logger from "/services/logService";
+...
+logger.log(error);
+```
+
+
+
