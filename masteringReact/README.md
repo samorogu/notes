@@ -3472,5 +3472,16 @@ import logger from "/services/logService";
 logger.log(error);
 ```
 
+After all, one day after. It seems that the sentry did capture the error as a network error just as expected. The only questions that lefts is if raven or sentry/browser made it.
 
+##### Vidly Backend
 
+First we will install or update brew `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"` 
+
+Then we will install mongodb from brew: `brew install mongodb`. Then we will create a directory to store its data. 
+Lets create the directory where mongodb stores its data: ` mkdir -p /data/db`. 
+If it asks for permisions, we can otorgate them: `sudo mkdir -p /data/db`.
+Then we will write the right permision to write: sudo chown -R `id -un` /data/db. 
+After that we will run mongodemon: `mongod`.Now mongodemon will wait for conexions on port 27017. 
+
+Then we will install a client to connect to mongodb: `https://www.mongodb.com/download-center/compass?jmp=hero` This will give us a dmg to install the app of compass mongodb.
