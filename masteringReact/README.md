@@ -3485,3 +3485,12 @@ Then we will write the right permision to write: sudo chown -R `id -un` /data/db
 After that we will run mongodemon: `mongod`.Now mongodemon will wait for conexions on port 27017. 
 
 Then we will install a client to connect to mongodb: `https://www.mongodb.com/download-center/compass?jmp=hero` This will give us a dmg to install the app of compass mongodb.
+
+#### Setting up the node backend
+
+We go to github and clone the repository: `git clone https://github.com/mosh-hamedani/vidly-api-node.git` right next to the vidly application. 
+Next enter to the folder just created and install dependencies: `npm i` 
+Next we need to populate our database with sample data: `node seed.js`
+After that we will initialize our node server: `node index.js`
+
+The we can visit `http://localhost:3900/api/movies` and `http://localhost:3900/api/genres` to visit the api of movies and genres. This api can handle create, update and delete movies.
