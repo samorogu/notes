@@ -3494,3 +3494,50 @@ Next we need to populate our database with sample data: `node seed.js`
 After that we will initialize our node server: `node index.js`
 
 The we can visit `http://localhost:3900/api/movies` and `http://localhost:3900/api/genres` to visit the api of movies and genres. This api can handle create, update and delete movies.
+
+#### Disabling Authentication 
+
+We will test the api given by the node backend, for this we will install the chrome addon `postman`. After authenticating we will test the get with the next url, after running it with the node backend: `http://localhost:3900/api/movies`:
+
+```
+...
+{
+        "_id": "5c7620219728822ec16ed359",
+        "title": "Airplane",
+        "numberInStock": 5,
+        "dailyRentalRate": 2,
+        "genre": {
+            "_id": "5c7620219728822ec16ed358",
+            "name": "Comedy"
+        }
+    }
+```
+
+The we will test the post end point. In postman we will change to Post, check the raw in the body tab and change to json (application/json) from the combolist. then we will enter the next json object:
+
+```
+{
+  "title": "A new movie",
+  "numberInStock": 1,
+  "dailyRentalRate": 2,
+  "genreId":"5c7620219728822ec16ed358"
+}
+
+```
+
+This will be created in mongodb. For now we don't have to worry about authentication because in /config/default.json we see that requiresAut paramater is started in false, but this wouldn't be wanting in production. This will generate the next object in body of postman:
+
+```
+...
+{
+    "_id": "5c776d3d79f5ff029446663b",
+    "title": "A new movie",
+    "genre": {
+        "_id": "5c7620219728822ec16ed358",
+        "name": "Comedy"
+    },
+    "numberInStock": 1,
+    "dailyRentalRate": 2,
+    "__v": 0
+}
+```
