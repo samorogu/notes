@@ -3541,3 +3541,40 @@ This will be created in mongodb. For now we don't have to worry about authentica
     "__v": 0
 }
 ```
+
+#### Connect Movies Page to the Backend
+
+We will create a module to make little changes within our movies component and replace fakeMovie services with a real Movie services. For this we will import httpService.js and logService.js from the http-app source services files. Then we will import the dependencies: axios and toastify `npm i axios@0.18.0 react-toastify@4.1.0`. To make sure toast work we need to add a Toast Component:
+
+app.js
+
+```
+...
+import { ToastContainer } from "react-toastify";
+...
+import "react-toastify/dist/ReactToastify.css";
+...
+      <React.Fragment>
+        <ToastContainer />
+        <NavBar />
+
+```
+
+For now we will comment the Raven and Sentry capture exception and only print in the console the posible errors that might happen in the future.
+
+logService.js
+```
+function init() {
+  
+}
+
+function log(error) {
+  console.error(error);
+
+}
+
+export default {
+  init,
+  log
+};
+```
