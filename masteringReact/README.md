@@ -3580,3 +3580,35 @@ export default {
 ```
 
 #### Replacing fakeGenreService
+
+First we will small changes and start with the movies.jsx imported libraries:
+First we will create in services our genreService that has the same interface like the fakeGenreService:
+
+/services/fakeGenreService.js
+
+```
+...
+import http from './httpService';
+
+export function getGenres() {
+   return  http.get('http://localhost:3900/api/genres');
+  }
+...
+```
+The route should be in a config file, but for now we will deal with it in this script for simplicity.
+
+Then we will go to the movies.jsx and modify the importation of the library and change the getGenres() method because it is expecting a promise:
+
+```
+...
+import { getGenres } from "../services/genreService";
+...
+  async componentDidMount() {
+    const {data} = await getGenres();
+    const genres = [{ _id: "", name: "All Genres" }, ...data];
+    this.setState({ movies: getMovies(), genres });
+  }
+
+```
+
+Next if we run the server we will see that the genres are selected from the api. Next we will deal with a real movie service.
