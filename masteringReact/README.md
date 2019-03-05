@@ -3612,3 +3612,61 @@ import { getGenres } from "../services/genreService";
 ```
 
 Next if we run the server we will see that the genres are selected from the api. Next we will deal with a real movie service.
+
+#### Replacing fakeMovieService
+
+First we will create our moviesService.js that can call the movies and delete them:
+
+services/movieServices.js
+```
+import http from "./httpService";
+
+const apiEndpoint = "http://localhost:3900/api/movies";
+export function getMovies() {
+  return http.get(apiEndpoint);
+}
+
+export function deleteMovie(movieId) {
+  //always put attention to the return statement, because of the toast mesage didnt got out
+  return http.delete(apiEndpoint + "/" + movieId);
+}
+
+
+```
+
+Then in movies.js we will import these  modified functions and change to async methods when needed. One important note to add is in handleDelete we implemented it before with optimistic change and we should keep a copy of the previous state to change it if needed:
+
+movies.jsx
+
+```
+...
+import { getMovies, deleteMovie } from "../services/movieService";
+
+...
+  async componentDidMount() {
+    const { data } = await getGenres();
+    const genres = [{ _id: "", name: "All Genres" }, ...data];
+
+    const { data: movies } = await getMovies();
+    this.setState({ movies, genres });
+  }
+
+...
+ handleDelete = async movie => {
+    const originalMovies = this.state.movies;
+    const movies = originalMovies.filter(m => m._id !== movie._id);
+    //in modern javascript when we have this repetition, we can leave only the movie
+    //this.setState({ movies: movies });
+    this.setState({ movies });
+
+    try {
+      await deleteMovie(movie._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        toast.error("This movie has already been deleted.");
+      console.log("entre al error");
+      this.setState({ movies: originalMovies });
+    }
+  };
+
+```
