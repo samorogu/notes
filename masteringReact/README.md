@@ -3670,3 +3670,39 @@ import { getMovies, deleteMovie } from "../services/movieService";
   };
 
 ```
+
+#### Extracting a Config File
+
+
+To get rid of the uggly hardcoded route of genreService and movieService, we will create a config.json file that has the route of the api:
+
+config.json
+```
+{
+  "apiUrl": "http://localhost:3900/api"
+}
+
+```
+
+Then we will used object destructuring to access this attribute and call the apiUrl:
+
+movieService.js
+
+```
+...
+import { apiUrl } from "../config.json";
+
+//const apiEndpoint = "http://localhost:3900/api/movies";
+const apiEndpoint = apiUrl + "/movies";
+```
+
+genreService.js
+
+```
+...
+import { apiUrl } from "../config.json";
+...
+  //return http.get("http://localhost:3900/api/genres");
+  return http.get(apiUrl + "/genres");
+
+```
