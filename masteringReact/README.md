@@ -3706,3 +3706,46 @@ import { apiUrl } from "../config.json";
   return http.get(apiUrl + "/genres");
 
 ```
+
+#### Populating the form
+
+Now we will go to the movieService and create the methods to getMovie:
+
+movieService.js
+```
+...
+
+export function getMovie(movieId) {
+  return http.get(apiEndpoint + "/" + movieId);
+}
+
+```
+
+Now we will change the movieForm to handle this services:
+
+```
+...
+import { getGenres } from "../services/genreService";
+import { getMovie, saveMovie } from "../services/movieService";
+...
+async componentDidMount() {
+    const { data: genres } = await getGenres();
+    this.setState({ genres });
+
+    const movieId = this.props.match.params.id; //we get the id of the movie selected
+    if (movieId === "new") return; //we return an empty form to fill
+
+    try {
+      const { data: movie } = await getMovie(movieId);
+      this.setState({ data: this.mapToViewModel(movie) }); //we show the current movie details
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        this.props.history.replace("/not-found");
+      //if (!movie) return this.props.history.replace("/not-found"); //if  we put push it will return the last page with an invalide id
+    }
+  }
+
+  We change the wait and async methods and change the handle error with a try catch error for the status 404.Before.
+
+
+```
