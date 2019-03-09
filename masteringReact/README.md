@@ -3781,3 +3781,31 @@ async populateGenres() {
     await this.populateMovie();
   }
 ```
+
+#### Saving the form
+
+Now we will deal with te saving the movie and have to deal with 2 scenarios: existing movie and new movie. If the movie already exists, we will create a copy of the existing movie and delete it id because it is an error if we try to modify the id, the id most be unique; otherwise, we need to  create a movie and only create it.
+
+movieService.js
+```
+export function saveMovie(movie) {
+  if (movie._id) {
+    const body = { ...movie };
+    delete body._id;
+    return http.put(apiEndpoint + "/" + movie._id, body);
+  } else {
+    return http.post(apiEndpoint, movie);
+  }
+
+```
+
+Then we will include await and async to the movieForm to deal with the api:
+
+movieForm.js
+```
+doSubmit = async () => {
+    await saveMovie(this.state.data);
+
+    this.props.history.push("/movies"); //finally we redirect the user to movies
+  };
+```
