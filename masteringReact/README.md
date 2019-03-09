@@ -3749,3 +3749,35 @@ async componentDidMount() {
 
 
 ```
+
+#### Refactoring the componentDidMount
+
+To make the code a little more readable, we will create 2 methods: `populateGenres` and `populateMovie`. This will be called inside the `componentDidMount`:
+
+movieForm.js
+
+```
+async populateGenres() {
+    const { data: genres } = await getGenres();
+    this.setState({ genres });
+  }
+
+  async populateMovie() {
+    try {
+      const movieId = this.props.match.params.id; //we get the id of the movie selected
+      if (movieId === "new") return; //we return an empty form to fill
+
+      const { data: movie } = await getMovie(movieId);
+      this.setState({ data: this.mapToViewModel(movie) }); //we show the current movie details
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        this.props.history.replace("/not-found");
+      //if (!movie) return this.props.history.replace("/not-found"); //if  we put push it will return the last page with an invalide id
+    }
+  }
+
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovie();
+  }
+```
