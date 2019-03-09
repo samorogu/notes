@@ -3809,3 +3809,38 @@ doSubmit = async () => {
     this.props.history.push("/movies"); //finally we redirect the user to movies
   };
 ```
+
+#### Refactoring the movieUrl
+
+In movieService we can see there is a repetitive set of instructions, the apiEndpoint plus the movieId. So we will create a function to deal with this:
+
+movieService.js
+```
+...
+function MovieUrl(id){
+  return `${apiEndpoint}/{id}`;//template numerals in EG6
+  //return "apiEndpoint +'/'+id;";//less elegant solution
+  
+}
+
+...
+export function deleteMovie(movieId) {
+  return http.delete(MovieUrl(movieId));
+}
+
+export function getMovie(movieId) {
+  return http.get(MovieUrl(movieId));
+}
+
+export function saveMovie(movie) {
+  if (movie._id) {
+    const body = { ...movie };
+    delete body._id;
+    return http.put(MovieUrl(movie._id), body);
+  } else {
+    return http.post(apiEndpoint, movie);
+  }
+
+```
+
+It is important to note that we can select one word and change all occurrences of it if we click `F2`
