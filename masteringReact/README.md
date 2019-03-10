@@ -3844,3 +3844,58 @@ export function saveMovie(movie) {
 ```
 
 It is important to note that we can select one word and change all occurrences of it if we click `F2`
+
+### Authentication and Authorization
+
+#### Registering a new user
+
+To view the test api for register user we can go to the postman app and put the link to this route: `http:/localhost:3900/api/users` then click the post and with raw selected, enter the next text:
+
+```
+{
+  "email":"user1@domain.com",
+  "password":"123456",
+  "name": "Sam"
+}
+``` 
+
+If we send this information with the backend running we can see that we receive  the _id, name and email with a status 200. If we post the same information, now we receive a status 400 'bad request' with a text user already registered.
+
+#### Submitting the registration form
+
+Now we will create a userService for dealing with new users:
+
+services/userService.js
+
+```
+import http from "./httpService";
+import { apiUrl } from "../config.json";
+
+//const apiEndpoint = "http://localhost:3900/api/movies";
+
+const apiEndpoint = apiUrl + "/users";
+
+export function register(user) {
+  http.post(apiEndpoint, {
+    email: user.username,
+    password: user.password,
+    name: user.name
+  });
+}
+```
+
+Then in register form we will call this methods from another perspective and deal with the api:
+
+```
+...
+import * as userService from "../services/userService";
+...
+ doSubmit = async () => {
+    //call the server
+    //console.log("submitted");
+    await userService.register(this.state.data);
+  };
+
+```
+
+For now nothing happens but if we go to the db, we can see that the user succesfully was created.
