@@ -3899,3 +3899,24 @@ import * as userService from "../services/userService";
 ```
 
 For now nothing happens but if we go to the db, we can see that the user succesfully was created.
+
+
+#### Handling registration errors
+
+Now we will deal as the previous  section, with errors. In this case with errors made by the client:
+
+registerForm.js
+```
+...
+ doSubmit = async () => {
+    try{
+      await userService.register(this.state.data);
+    }
+    catch (ex){
+      if(ex.response && ex.response.status==400)
+        const errors ={...this.state.errors};
+        errors.username=ex.response.data;
+        this.setState({errors});
+    }
+  };
+```
