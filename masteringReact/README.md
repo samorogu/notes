@@ -3920,3 +3920,18 @@ registerForm.js
     }
   };
 ```
+
+#### Logging in a user
+
+If we return to postman and now use the endpoint: http://localhost:3900/api/auth. It expects an email and a password and if it is registered in the db, it will return a web token, an identification card to reach the valids routes:
+
+postman>body
+```
+{
+  "email":"user1@domain.com",
+  "password":"123456"
+}
+
+```
+
+
