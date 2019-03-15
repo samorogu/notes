@@ -3934,4 +3934,58 @@ postman>body
 
 ```
 
+#### Submitting the login form
 
+Just as the registration, we will create a authService:
+
+services/authService.js
+```
+import http from "./httpService";
+import { apiUrl } from "../config.json";
+
+const apiEndpoint = apiUrl + "/auth";
+
+export function login(email, password) {
+  return http.post(apiEndpoint, { email, password });
+}
+
+```
+
+Next we will go to the loginForm, import this service and change the do submit method:
+
+loginForm.js
+```
+ doSubmit = async () => {
+    //call the server
+    //console.log("submited");
+    const { data } = this.state;
+    await login(data.username, data.password);
+  };
+
+```
+
+For now we cannot check visually in the app that the user logged in, but the next section we will deal with those errors.
+
+
+#### Handling login errors
+
+Just as the registerForm, we will put the doSubmint in a try catch error:
+
+loginForm.js
+```
+...
+ doSubmit = async () => {
+    //call the server
+    //console.log("submited");
+    try {
+      const { data } = this.state;
+      await login(data.username, data.password);
+    } catch (ex) {
+      if (ex.response && ex.response.status == 400) {
+        const errors = { ...this.state.errors };
+        errors.username = ex.response.data;
+        this.setState({ errors });
+      }
+    }
+  };
+```
