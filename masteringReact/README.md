@@ -3989,3 +3989,6 @@ loginForm.js
     }
   };
 ```
+
+#### Storing the JWT
+
