@@ -4016,3 +4016,44 @@ loginForm.jsx
 ```
 
 Now if we go the the Application tab in chrome>Storage>localhost: we will see our web token key to navigate through all the app.
+
+#### Logging the user upon registration
+
+First of all we need to clarify that when we were making the userService.js, we forgot to return the promise, we only register the user but didn't return any data to interact with the front end.
+
+Now if we go to postman, we can see that when registering a user, in the header, it is return a custom header: 'x-auth-token' that Mosh made to demostrate how to pass data in the header. We need to make an little modification in the backend to make visible the header:
+
+vidley-api-node/routers/user.js
+```
+...
+  const token = user.generateAuthToken();
+  res
+    .header("x-auth-token", token)
+    .header("access-control-expose-headers", "x-auth-token")
+    .send(_.pick(user, ["_id", "name", "email"]));
+});
+
+```
+
+We expose the header and then in the registerform, now we can access this header and store this token in the database:
+
+registerForm.jsx
+```
+  doSubmit = async () => {
+    //call the server
+    //console.log("submitted");
+    try {
+      const response = await userService.register(this.state.data);
+      localStorage.setItem("token", response.headers["x-auth-token"]);
+      this.props.history.push("/");
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors.username = ex.response.data;
+        this.setState({ errors });
+      }
+    }
+  };
+```
+
+Now we can test the application and see that it redirects to the homepage and ind the local Storage the token is made.
