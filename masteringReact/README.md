@@ -3992,3 +3992,27 @@ loginForm.js
 
 #### Storing the JWT
 
+Now we will store the web token in the small database that has web navigators. So in loginForm we will store it and redirect to the movies:
+
+loginForm.jsx
+```
+  doSubmit = async () => {
+    //call the server
+    //console.log("submited");
+    try {
+      const { data } = this.state;
+      const { data: jwt } = await login(data.username, data.password);
+      localStorage.setItem("token", jwt);
+      this.props.history.push("/");
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors.username = ex.response.data;
+        this.setState({ errors });
+      }
+    }
+  };
+
+```
+
+Now if we go the the Application tab in chrome>Storage>localhost: we will see our web token key to navigate through all the app.
