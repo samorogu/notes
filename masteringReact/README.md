@@ -4099,3 +4099,7 @@ App.js
 ```
 
 Now we can pass the user information to the page.
+
+
+#### Displaying the current user on NavBar
+
