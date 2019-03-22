@@ -4103,3 +4103,50 @@ Now we can pass the user information to the page.
 
 #### Displaying the current user on NavBar
 
+Now that we have the information of the user in the navBar, we will call it in the navBar and dinamically render the login and register if the user isn't logged in and display the name and a logout button if the user is logged in. Those navlinks need to be wrapped inside a react.fragment because of jsx expressions must have a parent:
+
+navBar.jsx
+```
+...
+const NavBar = ({ user }) => {
+...
+          {!user && (
+            <React.Fragment>
+              <NavLink className="nav-item nav-link" to="/login">
+                Login
+              </NavLink>
+              <NavLink className="nav-item nav-link" to="/register">
+                Register
+              </NavLink>
+            </React.Fragment>
+          )}
+          {user && (
+            <React.Fragment>
+              <NavLink className="nav-item nav-link" to="/profile">
+                {user.name}
+              </NavLink>
+              <NavLink className="nav-item nav-link" to="/logout">
+                Logout
+              </NavLink>
+            </React.Fragment>
+          )}
+
+```
+
+Now we have to make a little modification inside the loginForma and registerForm because if the user logged in, we would need to reload the page to redirect to the  page where we can see the user page. With the modification, the reloaded is made in those scripts:
+
+loginForm.js
+```
+...
+    //this.props.history.push("/");
+      window.location = "/";
+
+```
+
+registerForm.js
+```
+...
+     //this.props.history.push("/");
+      window.location = "/";
+
+```
