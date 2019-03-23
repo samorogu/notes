@@ -4150,3 +4150,39 @@ registerForm.js
       window.location = "/";
 
 ```
+
+#### Logging out a User
+
+For a strange reason when making the first changes, I encounter a compiling error that made the page to not render, it was the cached trying to get the token. It seems that deleting the token fixed it.
+
+This component was pretty easy, it just reloaded the page and deleted the token:
+
+components/logout.js
+```
+import { Component } from "react";
+
+class Logout extends Component {
+  componentDidMount() {
+    localStorage.removeItem("token");
+    window.location = "/";
+  }
+  render() {
+    return null;
+  }
+}
+
+export default Logout;
+
+```
+
+Now in the App we create this route:
+
+App.js
+```
+...
+import Logout from "./components/logout";
+...
+<Route path="/logout" component={Logout} />
+
+```
+
