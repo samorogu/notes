@@ -4186,3 +4186,88 @@ import Logout from "./components/logout";
 
 ```
 
+#### Refactoring
+
+The log in credential should be abstracted  in a separated modules, so we will unify the key and not have it in multiple places. So we will complete our authServices an create multiple functions to deal with tokens within registerform, loginform, app.jss and logout.js
+
+services/authServices.js
+```
+import jwtDecode from "jwt-decode";
+...
+const tokenKey = "token";
+export async function login(email, password) {
+  const { data: jwt } = await http.post(apiEndpoint, { email, password });
+  localStorage.setItem(tokenKey, jwt);
+}
+
+export function loginWithJwt(jwt) {
+  localStorage.setItem(tokenKey, jwt);
+}
+
+export function logout() {
+  localStorage.removeItem(tokenKey);
+}
+
+export function getCurrentUser() {
+  try {
+    const jwt = localStorage.getItem(tokenKey);
+    return jwtDecode(jwt);
+  } catch (ex) {
+    return null;
+  }
+}
+export default {
+  login,
+  loginWithJwt,
+  logout,
+  getCurrentUser
+};
+
+```
+
+The we will change the call of this functions on the components, starting on the registerForm, only passing the user token:
+
+registerForm.js
+```
+...
+import auth from "../services/authService";
+...
+
+      //localStorage.setItem("token", response.headers["x-auth-token"]);
+      auth.loginWithJwt(response.headers["x-auth-token"]); 
+```
+
+
+Then the loginForm.js
+
+```
+import auth from "../services/authService";
+...
+      //localStorage.setItem("token", jwt);
+      await auth.login(data.username, data.password);
+
+```
+Then the App.js
+
+```
+//import jwtDecode from "jwt-decode";
+import auth from "./services/authService";
+...
+
+<!--     try {
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
+      this.setState({ user });
+    } catch (ex) {} -->
+const user = auth.getCurrentUser();
+```
+
+and last but not least
+
+```
+...
+import auth from "../services/authService";
+...
+    //  localStorage.removeItem("token");
+    auth.logout();
+```
