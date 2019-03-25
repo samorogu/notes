@@ -4271,3 +4271,48 @@ import auth from "../services/authService";
     //  localStorage.removeItem("token");
     auth.logout();
 ```
+
+
+#### Calling protected api endpoints
+
+First in the proyect where the api stands we will change the authorization:
+
+vidly-api/default.json
+```
+{
+  "jwtPrivateKey": "unsecureKey",
+  "db": "mongodb://localhost/vidly",
+  "port": "3900",
+  "requiresAuth": true
+}
+```
+
+Now if we try to edit a movie, it will have an status of 401: unauthorized. This can be seen also in the network. We neet to pass the valid token so in authService we will create a function to pass this token:
+
+authService.js
+```
+export function getJwt() {
+  return localStorage.getItem(tokenKey);
+}
+...
+export default {
+  login,
+  loginWithJwt,
+  logout,
+  getCurrentUser,
+  getJwt
+};
+
+```
+
+Use it and import it in the httpService:
+
+```
+...
+import auth from "authService";
+
+//as common, post can be used to send information in the header of http post
+axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
+```
+
+Now if the user is log in, it will create the movie and if it is not logged in, it will respond with a bad request.
