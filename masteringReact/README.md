@@ -4316,3 +4316,32 @@ axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
 ```
 
 Now if the user is log in, it will create the movie and if it is not logged in, it will respond with a bad request.
+
+#### Fixing bi-directional dependencies
+
+We need to delete bidireccional in the http service with the auth service. Our auth module doesn't need to have a reference from the http service, so instead of geting jwt, we shoud set it in the http Service:
+
+httpService.js
+
+```
+...
+export function setJwt(jwt) {
+  axios.defaults.headers.common["x-auth-token"] = jwt;
+}
+
+export default {
+  get: axios.get,
+  post: axios.post,
+  put: axios.put,
+  delete: axios.delete,
+  setJwt
+};
+
+```
+
+ and change the authService.js
+
+ ```
+...
+http.setJwt(getJwt());
+ ``
