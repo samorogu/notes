@@ -4339,9 +4339,14 @@ export default {
 
 ```
 
- and change the authService.js
+and change the authService.js
 
- ```
+```
 ...
 http.setJwt(getJwt());
- ``
+```
+
+#### Authorization
+
+If we try to delete a movie, nothing happends. If we see the network, we will see that is forbiden by the backend only for admin.
+
