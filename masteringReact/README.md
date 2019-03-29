@@ -4348,5 +4348,11 @@ http.setJwt(getJwt());
 
 #### Authorization
 
-If we try to delete a movie, nothing happends. If we see the network, we will see that is forbiden by the backend only for admin.
+If we try to delete a movie, nothing happens. If we see the network, we will see that is forbidden by the back-end only for admin. So we will change some user information to make it admin. We go to a user like user9@domain.com and add a new property: isAdmin and make it true modifying it to a boolean.
+
+If we try to delete a movie, it wont be deleted. If we go to jwt.io and decode the jwt we can see that the payload doesn't have the admin property. If we log out and log in, it should have the payload with the property is admin and be available to delete it. 
+
+
+
+
 
