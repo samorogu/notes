@@ -4352,7 +4352,37 @@ If we try to delete a movie, nothing happens. If we see the network, we will see
 
 If we try to delete a movie, it wont be deleted. If we go to jwt.io and decode the jwt we can see that the payload doesn't have the admin property. If we log out and log in, it should have the payload with the property is admin and be available to delete it. 
 
+#Showing or hiding elements based on the user
 
+If a user isn't logged in, it would  be nice to hide the button to add some user or to hide the highlight of a movie tittle.
 
+For this we will  pass the user to the movies route with  props:
 
+App.js
+```
+...
+           <Route
+              path="/movies"
+              render={props => <Movies {...props} user={this.state.user} />}
+            />
+```
+
+Then in the movies we will conditional render the add new movie:
+
+movies.jsx
+```
+...
+        <div className="col">
+          {user && (
+            <Link
+              to="/movies/new"
+              className="btn btn-primary"
+              style={{ marginBottom: 20 }}
+            >
+              New Movie
+            </Link>
+          )}
+...
+
+```
 
