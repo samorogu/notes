@@ -4352,7 +4352,7 @@ If we try to delete a movie, nothing happens. If we see the network, we will see
 
 If we try to delete a movie, it wont be deleted. If we go to jwt.io and decode the jwt we can see that the payload doesn't have the admin property. If we log out and log in, it should have the payload with the property is admin and be available to delete it. 
 
-#Showing or hiding elements based on the user
+#### Showing or hiding elements based on the user
 
 If a user isn't logged in, it would  be nice to hide the button to add some user or to hide the highlight of a movie tittle.
 
@@ -4385,4 +4385,55 @@ movies.jsx
 ...
 
 ```
+#### Protecting routes
 
+Now we will protect the movie form if a user want to go to the route.
+So we will go to the App.js and conditional rendering if the user is logged in:
+
+App.js
+```
+...
+render(){
+    const { user } = this.state;
+...
+            <Route
+              path="/movies/:id"
+              render={props => {
+                if (!user) return <Redirect to="/login" />;
+                return <MovieForm {...props} />;
+              }}
+            />
+...
+}
+
+```
+
+Now if the user tries to go to a route, it will be redirected to the login form. This solution isn't as scalable so next we will use a redirect component
+
+Also to complete the exercise we will conditional render the titles of the names if the user is logged in. So first we will pass the user to the Movies table:
+
+movies.jsx
+
+```
+          <MoviesTable
+            movies={movies}
+            sortColumn={sortColumn}
+            onLike={this.handleLike}
+            onDelete={this.handleDelete}
+            onSort={this.handleSort}
+            user={user}
+          />
+```
+
+Then in moviesTables we will change the content of the movie. If the user is logged in, we will only render the title and if it is logged in, we will render the link:
+
+moviesTable.jsx
+```
+...
+      content: movie => {
+        if (!this.props.user) return <p>{movie.title}</p>;
+        return <Link to={`/movies/${movie._id}`}>{movie.title} </Link>;
+      }
+    }
+
+```
