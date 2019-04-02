@@ -4437,3 +4437,39 @@ moviesTable.jsx
     }
 
 ```
+
+#### Extracting protectedRoute
+
+Now we will extract the logic of protected routes. 
+
+protectedRoute.jsx
+```
+import React from "react";
+import auth from "../services/authService";
+import { Route, Redirect } from "react-router-dom";
+
+const ProtectedRoute = ({ path, component: Component, render, ...rest }) => {
+  return (
+    <Route
+      //path={path}//with the reest operator we will take the path
+      {...rest}
+      render={props => {
+        if (!auth.getCurrentUser()) return <Redirect to="/login" />;
+        return Component ? <Component {...props} /> : render(props);
+      }}
+    />
+  );
+};
+
+export default ProtectedRoute;
+```
+
+And then use it int the main app
+
+App.js
+```
+           <Route
+              path="/movies"
+              render={props => <Movies {...props} user={this.state.user} />}
+            />
+```
