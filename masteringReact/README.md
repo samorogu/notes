@@ -4473,3 +4473,6 @@ App.js
               render={props => <Movies {...props} user={this.state.user} />}
             />
 ```
+
+#### Redirecting after Login
+
