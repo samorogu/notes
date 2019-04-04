@@ -4476,3 +4476,50 @@ App.js
 
 #### Redirecting after Login
 
+First we will coment the line that renders the title of the movie if the user isn't logged in.
+
+moviesTable.jsx
+```
+content: movie => {
+        //if (!this.props.user) return <p>{movie.title}</p>;
+        return <Link to={`/movies/${movie._id}`}>{movie.title} </Link>;
+      }
+
+```
+
+Then if we try to modify a movie, it will redirect to the login page. And if we log in, we will be redirected to the movies instead of move to the page that we were.
+
+The we go to the protectedRoute component and if we check the documentation of react, we can see that there are two forms to redirect the user: one is with a simple text, as we have done earlier; and second with an object.
+
+so we will change our protectedRoute.jsx
+
+```
+...
+          return (
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: props.location }
+              }}
+            />
+          );
+
+```
+
+With this we can change our loginForm and if the user is logging in without changing a movie, it will be send directly to the movies.
+
+loginForm.jsx
+```
+render() {
+    if (auth.getCurrentUser()) return <Redirect to="/" />;
+    return (
+      <div>
+        <h1>Login</h1>
+        <form onSubmit={this.handleSubmit}>
+          {this.renderInput("username", "Username")}
+          {this.renderInput("password", "Password", "password")}
+          {this.renderButton("Login")}
+        </form>
+      </div>
+    );
+```
