@@ -4523,3 +4523,9 @@ render() {
       </div>
     );
 ```
+
+#### Hiding the delete column
+
+If the user is logged in and is an admin, he should be capable of deleting a movie.
+
+In the exercice made by mosh, it explicity hide a column and I hide the button. A slidly different aproach. So for now we will get our implementation
