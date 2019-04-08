@@ -4529,3 +4529,24 @@ render() {
 If the user is logged in and is an admin, he should be capable of deleting a movie.
 
 In the exercice made by mosh, it explicity hide a column and I hide the button. A slidly different aproach. So for now we will get our implementation
+
+moviesTable.jsx
+```
+key: "delete",
+      content: movie => {
+        if (this.props.user && this.props.user.isAdmin)
+          return (
+            <button
+              onClick={() => this.props.onDelete(movie)}
+              className="btn btn-danger btn-sm ml-2"
+            >
+              Delete
+            </button>
+          );
+        return null;
+      }
+    }
+
+```
+
+As we see, we only need to pass the user and the user by props. But another aproach is to import it with user authentication without having to deal with pasing it by props.
