@@ -4550,3 +4550,29 @@ key: "delete",
 ```
 
 As we see, we only need to pass the user and the user by props. But another aproach is to import it with user authentication without having to deal with pasing it by props.
+
+moviesTable.jsx
+```
+...
+import auth from "../services/authService";
+...
+ deleteColumn = {
+    key: "delete",
+    content: movie => (
+      <button
+        onClick={() => this.props.onDelete(movie)}
+        className="btn btn-danger btn-sm"
+      >
+        delete
+      </button>
+    )
+  };
+  constructor() {
+    super();
+    const user = auth.getCurrentUser();
+    if (user && user.isAdmin) this.columns.push(this.deleteColumn);
+  }
+
+```
+
+We create an object to avoid polluting our constructor that will inherate methods and we will push the column if the user is true c and is an admin.
