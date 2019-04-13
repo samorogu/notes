@@ -4614,3 +4614,9 @@ If everything is ok, we can use heroku.
 
 We will create a mLab cloud that has a fantastic free plan.For now, mongodb atlas was redirected because mongo bought mlab. Because of this I had to create an accout. Then create a user and then add the ip adress that will have acess to the database. This steps were preatty simple. Also I used the freeplan M0 listed from mongodb atlas. Then the last step is to conect to the cluster. It seems that there are 3 forms to conect: shell, connection with app and mongoDB compass.
 
+#### Deploying to heroku
+
+We will create a unique heroku name and leave to heroku chose the name because there would be different names for this apps in the cloud. This we will create it in the vidley-api-node `heroku create`
+
+For me it created the name `polar-retreat-108596`. Our front end should make request to the url the link posted by heroku. Also, we can see the address of a heroku git repository. To upload this code from our local machine, we will use: `git push heroku master`. When we created the heroku app, a git remote was url was added. So we will push that code to heroku. It had an error. For now I will let from here
+
