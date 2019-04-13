@@ -4589,4 +4589,12 @@ REACT_APP_NAME=Vidly in Dev
 REACT_APP_VERSION=1
 ```
 
-In App.js we will print in the console `console.log(process.env)`. This will print the enviroment variables in the current process. Node_Env has the name development and at the end we will see the variables created.
+In App.js we will print in the console `console.log(process.env)`. This will print the environment variables in the current process. Node_Env has the name development and at the end we will see the variables created.
+
+Now we will change the print to `console.log("SUPERMAN",process.env.REACT_APP_NAME)`. Now in the console we will see the superman string and  if we search in the bundle.js, we will se the actual value of that environment variable. In the build time all the environment variables will change with the actual value
+
+#### Production Builds
+
+In the console, when we are ready to build our app we will run in the console `npm run build`, this will create an optimized production build. This will take some time.
+
+Now in the project, we can send the build production. To test it in the machine we can install a simple light weight server `npm i -g serve`. With this we can serve the content of the build project.Now we can serve the project: `serve -s build`. It will be in localhost port 5000. If we open the console. Superman is undifine because we didn't put the enviroment of react app name, only in production. We need to add enviroment variables in production.
