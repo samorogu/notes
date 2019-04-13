@@ -4598,3 +4598,19 @@ Now we will change the print to `console.log("SUPERMAN",process.env.REACT_APP_NA
 In the console, when we are ready to build our app we will run in the console `npm run build`, this will create an optimized production build. This will take some time.
 
 Now in the project, we can send the build production. To test it in the machine we can install a simple light weight server `npm i -g serve`. With this we can serve the content of the build project.Now we can serve the project: `serve -s build`. It will be in localhost port 5000. If we open the console. Superman is undifine because we didn't put the enviroment of react app name, only in production. We need to add enviroment variables in production.
+
+#### Getting started with Heroku
+
+Now we will deploy our vidly app. First we create an accout from heroku and then install the heroku cli. If you have mac in your machine: `brew install heroku/brew/heroku`. It failed and suggested to install `xcode-select --install` to install the developer for xcode. With this, it started installing heroku.
+
+Now we can run `heroku -v` to see the version of heroku installed. At the time being, I have 'heroku/7.22.9 darwin-x64 node-v11.10.1' version.
+
+Now we will login:`heroku login` it will open a web-browser loggin and we will have to enter our credentials.
+
+If we are behind a firewall we need to set an eviromet variable, in windows we use set and in mac export: `export HTTP_PROXY=http:proxy.server.com:1234`.
+If everything is ok, we can use heroku.
+
+#### MongoDB on the cloud
+
+We will create a mLab cloud that has a fantastic free plan.For now, mongodb atlas was redirected because mongo bought mlab. Because of this I had to create an accout. Then create a user and then add the ip adress that will have acess to the database. This steps were preatty simple. Also I used the freeplan M0 listed from mongodb atlas. Then the last step is to conect to the cluster. It seems that there are 3 forms to conect: shell, connection with app and mongoDB compass.
+
