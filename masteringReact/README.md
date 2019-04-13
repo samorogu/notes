@@ -4576,3 +4576,5 @@ import auth from "../services/authService";
 ```
 
 We create an object to avoid polluting our constructor that will inherate methods and we will push the column if the user is true c and is an admin.
+
+### Deployment
