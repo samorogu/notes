@@ -4578,3 +4578,15 @@ import auth from "../services/authService";
 We create an object to avoid polluting our constructor that will inherate methods and we will push the column if the user is true c and is an admin.
 
 ### Deployment
+
+#### Enviroment Variables
+
+In config.json we use it to get the apiUrl.  We will crate a config por development and deployment. First we will talk about enviroment variables that during compilation will take the string literal  from the config file.In the root we will create the next file:
+
+.env.development
+```
+REACT_APP_NAME=Vidly in Dev
+REACT_APP_VERSION=1
+```
+
+In App.js we will print in the console `console.log(process.env)`. This will print the enviroment variables in the current process. Node_Env has the name development and at the end we will see the variables created.
