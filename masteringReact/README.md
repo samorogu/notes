@@ -4631,4 +4631,8 @@ package.json
 
 ``` 
 .
-Nex we can type in the terminal `heroku open` and
+Nex we can type in the terminal `heroku open` and a web page will open with an error that we will deal in the next section
+
+#### Viewing logs
+
+In heroku we can view the logs but it is better to use  `heroku logs` and we can see why  our aplication failed.  We need to go to default folder and set the adress the db adres on our mongodb database in mongodb atlas. For not having to store public keys we will define enviroment variables from the terminal
