@@ -4636,3 +4636,35 @@ Nex we can type in the terminal `heroku open` and a web page will open with an e
 #### Viewing logs
 
 In heroku we can view the logs but it is better to use  `heroku logs` and we can see why  our aplication failed.  We need to go to default folder and set the adress the db adres on our mongodb database in mongodb atlas. For not having to store public keys we will define enviroment variables from the terminal
+
+#### Setting environment variables on heroku
+
+First we will add to the whitelist the next ip as suggested by the [forum](https://forum.codewithmosh.com/d/404-help-me-with-this-mongodb-error-log-in-heroku/40).
+We will store this as an evironment variable on terminal. So in mongodb atlas we go to conection an pick the version 2.2.12 that will put a string as the next one:
+
+```
+mongodb://vidlyUser:<password>@XXXXX
+```
+We need to change the password for the one we defined for the vidleyUser and in the terminal put:
+
+```
+heroku config:set vidly_db="mongodb://vidlyUser:<password>@XXXXX"
+
+```
+
+Don't forget the quotes because it is a string.
+Then in the custom-enviroment-variables.json in the back en we will include the db  variable:
+
+```
+{
+  "jwtPrivateKey": "vidly_jwtPrivateKey",
+  "db": "vidly_db"
+}
+
+```
+
+So now our back end will have the variable that we defined in the terminal.
+If we edited, we need to add it and push it inside heroku: `git push heroku master`
+
+With this we can access the url created with heroku before and navigate to the [url](https://polar-retreat-10896.herokuapp.com/api/genres). For now it will be empty because we haven't populate it
+
