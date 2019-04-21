@@ -4668,3 +4668,43 @@ If we edited, we need to add it and push it inside heroku: `git push heroku mast
 
 With this we can access the url created with heroku before and navigate to the [url](https://polar-retreat-10896.herokuapp.com/api/genres). For now it will be empty because we haven't populate it
 
+#### Preparing the front-end for deployment
+
+First we need to create an eviroment for production, so in the root we will create .env.production:
+
+```
+REACT_APP_API_URL=https://polar-retreat-10896.herokuapp.com/api
+```
+
+and modify our .env.development if we need to test something:
+
+.env.development
+```
+REACT_APP_API_URL=http://localhost:3900/api
+```
+
+Next in authService.js, genreService.js,movieService.js and userService.js we will modify the config.json to access to the url:
+
+```
+////import { apiUrl } from "../config.json";
+const apiEndpoint = "/auth";
+```
+
+And in httpService we will get the default base url from the react_app_api_url defined before.
+
+Finally we will build our app: `npm run build` and serve it `serve -s build`.
+Now we can access to the react aplication that has access to the heroku backend.
+
+Now we can see that if there are no movies, a message no movies were added is display. We will change that:
+
+movies.jsx
+```
+//if (count === 0) return <p>There are no movies</p>; 
+
+```
+
+Then we will build again our app and serve it.
+
+If we can see, our database is empty, so we will use the conection from mongodb compass to access to mongodb atlas an manually create some genres that cannot be created in the app: Comedy, Thriller,Drama and Action.
+
+Now if we go reload, we can see those genres.
