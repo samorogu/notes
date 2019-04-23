@@ -4708,3 +4708,14 @@ Then we will build again our app and serve it.
 If we can see, our database is empty, so we will use the conection from mongodb compass to access to mongodb atlas an manually create some genres that cannot be created in the app: Comedy, Thriller,Drama and Action.
 
 Now if we go reload, we can see those genres.
+
+#### Deploying the front-end
+
+For the front end we will create a heroku app  so in the console:
+
+```
+heroku create --buildpack mars/create-react-app
+```
+
+This will create the app and get ready to deploy it on heroku.
+Now we will push it to heroku: `git push heroku master` . It will push the code and install the node modules needed for the app and finally open the page `heroku open` and the app will open in the next [link](https://stark-oasis-52125.herokuapp.com/movies)
