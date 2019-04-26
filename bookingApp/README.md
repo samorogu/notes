@@ -6,24 +6,26 @@ The api will have the next functionality:
 
 ## Set up
 
-we will start by starting the npm package controller `npm init` then we will install the sever, json manager `npm i --save express body-parser. Then only for develompment we install nodedemon `npm i --save-dev nodedemon`.
+we will start by starting the npm package controller `npm init`, enter all the defaults. then we will install the sever, json manager `npm i --save express body-parser. Then only for develompment we install nodedemon `npm i --save-dev nodemon`.
 
 In app.js we will start our server:
 
 app.js
 ```
-const express=requiere('express');
-const body-parser = requiere('body-parser');
+const express = require("express");
+const bodyParser = require("body-parser");
 
-const app = (express);
+const app = express();
 
-app.get("/",(req, res, next)=>{
-res.send("hello world");
+app.use(bodyParser.json());
+
+app.get("/", (req, res, next) => {
+  res.send("hello world");
 });
-app.listen(5000);
+app.listen(3000);
+
 
 ```
-
 Now we go to package.json and define the start script:
 
 package.json
