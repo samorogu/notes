@@ -100,24 +100,104 @@ With this we can get the information of the events
 
 Remember, double cuotes are important.
 
-## types and data in graphql
+## Types and data in graphql
 
-Now we will define the schema for the events:
+For now we hav created 2 types: RootQuery and RootMutation. Now we will define the schema for the event. Events will have _id (this notation is for mongodb), name, description, price and date. When a property in a type has !, it cannot be null, not optional.
+
 app.js
 ```
-...buildSchema{
-
-Type Event{
-_id:String!
-name:String!
-description:String!
-price: float!
-date: String!
-}
-Type RootQuery{
-events:[String!]!
-}
 ...
+buildSchema{
+
+  Type Event{
+    _id:String!
+    name:String!
+    description:String!
+    price: float!
+    date: String!
+  }
+
+...
+
+    type RootMutation{
+      createEvent(name: String): Event
+    }
+}
 ```
+
+Graphql reads an array of events, it can be an array of empty objects but it cannot be null. In the createEvent we could put all the parameters the type events needs, but we will create an input schema to avoid inecessary code in the RootMutation. We can see  that we not need the commas 
+
+app.js
+```
+...
+        input EventInput {
+          title: String!
+          description: String!
+          price: Float!
+          date: String!
+        }
+...
+    type RootMutation{
+      createEvent(eventInput: EventInput): Event
+    }
+
+```
+Now we will create in memory array that will be change later for a database. 
+
+app.js
+```
+...
+const app = express();
+
+const events= [];
+
+app.use(bodyParser.json());
+
+```
+
+Then in the createEvent we will create a random id, get the title, description, price and date from the args and finally push it to an array.
+
+```
+events: () => {
+        return events;
+      },
+      createEvent: args => {
+        const event = {
+          _id: Math.random().toString(),
+          title: args.eventInput.title,
+          description: args.eventInput.description,
+          price: +args.eventInput.price,
+          date: args.eventInput.date
+        };
+        events.push(event);
+        return event;
+      }
+```
+
+Then we can visit graphiql to pick data from the events that we want:
+
+```
+query{
+  events{
+
+  }
+}
+
+```
+
+Now we will create an event:
+
+```
+mutation{
+  createEvent(eventInput:{title:"a test",description:"Works!",price:12.4,date:"01-05-2019"}){
+    title
+    description
+    
+  }
+
+```
+
+We can only read the data that we want from the api without any transformation in the frontend. Our resolves gives everything and we only take what we want.
+
 
 
