@@ -350,4 +350,126 @@ query{
 
 Now we can create events and returns those events.
 
+## Adding relations
+
+We will add users to the models for them to book an event. The user will have email, password and created events. The events can be null. User are conected to the event if they created an event and the other way is by booking an event. For now we will focus for the created event. A relation is made in brackets so in createdEvents. The event will have the type `Schema.Tpymes.ObjectId` because that is the the types that uses mongoose(a list of ids the user created). The ref will let mongoose know that 2 models are conected, we use the name of the object we want to conect `event`.
+
+models/event.js
+```
+const mongoose = require("mongoose");
+
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
+  email: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  createdEvents: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Event"
+    }
+  ]
+});
+
+module.exports = mongoose.model("User", userSchema);
+```
+
+Also the events must have a reference to a user. It will have an id and a reference to a User:
+
+models/events.js
+```
+...
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  }
+
+```
+
+Then we will go to the mongodb to delete the events we previously created as test.
+
+Now we will go to app.js and add the user. In my resolver I will never return the password.  We will add the user, the input and the mutation when creating a user. Then in the resolvers we will add the createUser().If a user is created, we should store an encrypted password. For this, we will install `npm i bcryptjs` to create a hash.
+
+app.js
+```
+...
+const bcrypt = require("bcryptjs");
+...
+        type User {
+          _id: ID!
+          email: String!
+          password: String
+        }
+        ...
+          input UserInput {
+          email: String!
+          password: String!
+        }
+        ...
+            type RootMutation {
+            createEvent(eventInput: EventInput): Event
+            createUser(userInput: UserInput): User
+        }
+        ...
+        createUser: args => {
+        return User.findOne({ email: args.userInput.email })
+          .then(user => {
+            if (user) {
+              throw new Error("User exists already.");
+            }
+            return bcrypt.hash(args.userInput.password, 12);
+          })
+          .then(hashedPassword => {
+            const user = new User({
+              email: args.userInput.email,
+              password: hashedPassword
+            });
+            return user.save();
+          })
+          .then(result => {
+            return { ...result._doc, password: null, _id: result.id };
+          })
+          .catch(err => {
+            throw err;
+          });
+      }
+
+```
+
+Now we can create a user in graphiql:
+
+```
+mutation{
+  createUser(userInput:{email:"test@test.com",password:"tested"}){
+    email
+    password
+  }
+}
+```
+
+We don't want to retrieve the password that we show `password:null`. For dealing duplicates and will throw an error if the user already exists. Don't forget the return to get a promise. If we go and try to enter a new user, it will fail because it already exist.
+
+When creating and event we will atach the event creator. For now we will hardcode this.  When creating an event if we push event, it will be handle by mongoose. Then we will create a variable `createdEvent` that  has the information of the Event.
+
+Lest create a new event:
+
+```
+mutation {
+  createEvent(eventInput: {title: "a test", description: "This is a test", price: 12.4, date: "2019-05-05T19:25:45.901Z"}) {
+    title
+    description
+  }
+}
+
+```
+
+Now if we go to mongodb we will see the event attached to the user and the other way around.
+
+
 
