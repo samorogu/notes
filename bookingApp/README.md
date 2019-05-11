@@ -471,5 +471,5 @@ mutation {
 
 Now if we go to mongodb we will see the event attached to the user and the other way around.
 
-
+## Dynamic Relations
 
