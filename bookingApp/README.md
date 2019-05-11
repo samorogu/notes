@@ -473,3 +473,226 @@ Now if we go to mongodb we will see the event attached to the user and the other
 
 ## Dynamic Relations
 
+First, for a event it will have a creator and the user will have a created event:
+
+app.js
+```
+       type Event {
+          _id: ID!
+          title: String!
+          description: String!
+          price: Float!
+          date: String!
+          creator:User!
+        }
+
+        type User {
+          _id: ID!
+          email: String!
+          password: String
+          createdEvents:[Event!]
+        }
+
+```
+ 
+ Now we can go to graphiql and fetch the creator:
+
+ ```
+query{
+  
+  events{
+  creator{
+  email
+    }
+  }
+}
+
+ ```
+
+ This will have an error because  this is not what we return from the resolver. In the db there is not complete user, creator only has the id of the user. 
+
+ For this to work we need to go to the resolver event and populate the relation with creator:
+
+app.js
+ ```
+   events: () => {
+        return Event.find().populate('creator')
+          .then(events => {
+            return events.map(event => {
+              return { ...event._doc, _id: event.id };
+            });
+          })
+          .catch(err => {
+            throw err;
+          });
+      }
+
+ ``` 
+
+ Now if we go for the email, we will get the email without the error. If we fetch the _id, we will have an error so we will solve it as we did before:
+
+app.js
+ ```
+    events: () => {
+        return Event.find().populate('creator')
+          .then(events => {
+            return events.map(event => {
+              return { ...event._doc, _id: event.id,
+                creator: {
+                  ...event.doc.creator._doc,
+                  _id:event.doc.creator._doc
+                }
+               };
+            });
+          })
+          .catch(err => {
+            throw err;
+          });
+      }
+
+ ```
+
+ Now if we want the events and info from the same user in graphiql:
+
+
+ ```
+ query{
+  
+  events{
+  creator{
+  email
+  createdEvents{
+      title
+    }
+  }
+  }
+}
+
+ ```
+
+ We did populated the info for the user but the created events has the ids. This is good because it would have an infinite loop.  To get this flexibility we will create a global variable and get rid of the populate method:
+
+app.js
+ ```
+ ...
+const user = async userId => {
+  try {
+    const user = await User.findById(userId);
+    return {
+      ...user._doc,
+      _id: user.id,
+      createdEvents: events.bind(this, user._doc.createdEvents)
+    };
+  } catch (err) {
+    throw err;
+  }
+};
+...
+
+    events: () => {
+        return Event.find()
+          .then(events => {
+            return events.map(event => {
+              return { ...event._doc, _id: event.id,
+                creator: user.bind(this, event._doc.creator)
+               };
+            });
+          })
+          .catch(err => {
+            throw err;
+          });
+      }
+ ```
+
+ This still works. Now We can add an events constant as the same way as the users. The `{$in:}` is a special character used by mongodb that filters one of th:
+
+app.js
+ ```
+ ...
+ const events=eventIds=>{
+  return Event.find({_id:{$in:eventsIds}}).then(
+        events=>{
+          return events.map(event=>{
+              return{...event._doc,
+                _id:event.id,
+                creator:user.bind(this,event.creator)};
+            });
+        }).catch(
+    err=>throw err:
+    )
+ }
+
+
+ ```
+
+ This allow model relations in a flexible way. Now we can call and events, then a creator, then an event and then a creator in graphiql without enter an infinite loop:
+
+  ```
+ query{
+  
+  events{
+    title
+  creator{
+  email
+    createdEvents{
+      title
+    }
+      }
+    }
+  }
+
+ ```
+
+ When we try to create an event and try to access the user, it will throw an error because we haven't bind that event with a user:
+
+ ```
+ ...
+ createdEvent = {
+        ...result._doc,
+        _id: result._doc._id.toString(),
+        date: new Date(event._doc.date).toISOString(),
+        creator: user.bind(this, result._doc.creator)
+      };
+
+ ```
+
+ Now we can call functions and return those values that gives a lot of flexibilities.
+
+ Lastly we will create another event and go for the creator:
+
+ ```
+mutation {
+  createEvent(eventInput: {title: "test 2", description: "This is another test", price: 19.9, date: "2019-05-10T19:25:45.901Z"}) {
+    title
+    creator{
+    email
+  }
+  }
+}
+ ```
+
+ Now we will clean up our code and create 2 folders: resolvers and schema inside a folder name resolvers. This for not making the app.js to big.
+
+ We will go to the reoslvers and change the format of the date:
+
+resolvers/index.js
+ ```
+ const events = async eventIds => {
+  try {
+    const events = await Event.find({ _id: { $in: eventIds } });
+    events.map(event => {
+      return {
+        ...event._doc,
+        _id: event.id,
+        date: new Date(event._doc.date).toISOString(),
+        creator: user.bind(this, event.creator)
+      };
+    });
+    return events;
+  } catch (err) {
+    throw err;
+  }
+};
+ ```
+
+ Finally we will use async await instead of promises. Instead we will use a differate sintax for the promises.
