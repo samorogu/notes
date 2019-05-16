@@ -696,3 +696,178 @@ resolvers/index.js
  ```
 
  Finally we will use async await instead of promises. Instead we will use a differate sintax for the promises.
+
+
+## Adding booking
+
+We will create a booking model that will have a reference to events and users. Then we will create a timestamps if we need to know when an event was booked or a user when does he/she created it:
+
+models/booking.js
+```
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+
+const bookingSchema = new Schema(
+  {
+    event: {
+      type: Schema.Types.ObjectId,
+      ref: 'Event'
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model('Booking', bookingSchema);
+```
+
+Then in the schema we will create the boogkin, createdAt and updatedAt will be created automatically from mongoose:
+
+graphql/schema/index.js
+```
+...
+type Booking {
+    _id: ID!
+    event: Event!
+    user: User!
+    createdAt: String!
+    updatedAt: String!
+}
+...
+type RootMutation {
+    createEvent(eventInput: EventInput): Event
+    createUser(userInput: UserInput): User
+    bookEvent(eventId: ID!): Booking!
+    cancelBooking(bookingId: ID!): Event!
+}
+
+```
+
+Now we will deal with the resolvers of the bookings.:
+
+graphql/resolvers/index.js
+```
+
+...
+const Booking = require("../../models/booking");
+...
+  bookings: async () => {
+    try {
+      const bookings = await Booking.find();
+      return bookings.map(booking => {
+        return {
+          ...booking._doc,
+          _id: booking.id,
+          user: user.bind(this, booking._doc.user),
+          event: singleEvent.bind(this, booking._doc.event),
+          createdAt: new Date(booking._doc.createdAt).toISOString(),
+          updatedAt: new Date(booking._doc.updatedAt).toISOString()
+        };
+      });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  ...
+    bookEvent: async args => {
+    const fetchedEvent = await Event.findOne({ _id: args.eventId });
+    const booking = new Booking({
+      user: "5cd238f6a5df3d041556ea40",
+      event: fetchedEvent
+    });
+    const result = await booking.save();
+    return {
+      ...result._doc,
+      _id: result.id,
+      user: user.bind(this, booking._doc.user),
+      event: singleEvent.bind(this, booking._doc.event),
+      createdAt: new Date(result._doc.createdAt).toISOString(),
+      updatedAt: new Date(result._doc.updatedAt).toISOString()
+    };
+  },
+  cancelBooking: async args => {
+    try {
+      const booking = await Booking.findById(args.bookingId).populate("event");
+      const event = {
+        ...booking.event._doc,
+        _id: booking.event.id,
+        creator: user.bind(this, booking.event._doc.creator)
+      };
+      await Booking.deleteOne({ _id: args.bookingId });
+      return event;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+```
+
+Now we will go to graphiql and create a booking:
+
+```
+mutation{
+  bookEvent(eventId:"5cd23934b4f3db04265245c4"){
+    createdAt
+    user{
+    email
+  }
+  }
+}
+```
+
+And this will create a book event. we will not get the user because we haven't created that logic. Now we will create a single event that will return the creator:
+
+```
+...
+const singleEvent = async eventId => {
+  try {
+    const event = await Event.findById(eventId);
+    return {
+      ...event._doc,
+      _id: event.id,
+      creator: user.bind(this, event.creator)
+    };
+  } catch (err) {
+    throw err;
+  }
+};
+
+```
+
+Now we can dive to the events and the bookings, the event and creator's event:
+
+
+```
+query{
+  bookings{
+    createdAt
+    event{
+      title
+        creator{
+          email
+        }
+      }
+    }
+  }
+
+```
+
+also we can delete a booking:
+
+```
+mutation{
+  cancelBooking(bookingId:"5cdcb0804e9fc703acad7749"){
+    title
+    creator{
+    email
+  }
+  }
+  }
+}
+
+```
